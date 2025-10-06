@@ -1,0 +1,32 @@
+site: substack
+name: Substack
+category:
+  - content
+  - writing
+tags:
+  - writing
+  - newsletter
+url_template: "https://{username}.substack.com"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".pencraft"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: title
+    selector:
+      type: css
+      query: ".publication-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

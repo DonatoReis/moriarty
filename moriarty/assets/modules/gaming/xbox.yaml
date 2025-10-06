@@ -1,0 +1,25 @@
+site: xbox
+name: Xbox Live
+category:
+  - gaming
+tags:
+  - gaming
+url_template: "https://account.xbox.com/en-us/profile?gamertag={username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".gamerpic"
+
+not_found_selectors:
+  - type: regex
+    query: "doesn't exist"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

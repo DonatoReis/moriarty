@@ -1,0 +1,44 @@
+site: medium
+name: Medium
+category:
+  - social
+  - blog
+tags:
+  - top20
+url_template: "https://medium.com/@{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "h1[data-testid='profile-name']"
+  - type: css
+    query: "[data-testid='profile-page']"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: "h1[data-testid='profile-name']"
+    required: false
+  
+  - name: bio
+    selector:
+      type: css
+      query: "p[data-testid='profile-bio']"
+    required: false
+  
+  - name: followers
+    selector:
+      type: css
+      query: "[data-testid='profile-followers']"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

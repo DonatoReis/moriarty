@@ -1,0 +1,27 @@
+site: angellist
+name: AngelList (Wellfound)
+category:
+  - professional
+  - startup
+tags:
+  - startup
+  - jobs
+url_template: "https://angel.co/u/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-test='UserProfile']"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

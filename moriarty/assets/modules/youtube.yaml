@@ -1,0 +1,42 @@
+site: youtube
+name: YouTube
+category:
+  - social
+  - video
+tags:
+  - top20
+url_template: "https://www.youtube.com/@{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: regex
+    query: '"channelId":"[^"]+"'
+  - type: regex
+    query: '"title":"[^"]+"'
+
+not_found_selectors:
+  - type: regex
+    query: "This page isn't available"
+  - type: regex
+    query: "404 Not Found"
+
+extractors:
+  - name: channel_id
+    selector:
+      type: regex
+      query: '"channelId":"([^"]+)"'
+      group: 1
+    required: false
+  
+  - name: title
+    selector:
+      type: regex
+      query: '"title":"([^"]+)"'
+      group: 1
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

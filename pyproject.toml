@@ -1,0 +1,89 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moriarty-osint"
+version = "0.1.0"
+description = "Client-side OSINT toolkit with forensic-grade evidence handling."
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "MIT"}
+authors = [
+  {name = "Moriarty Contributors"}
+]
+keywords = ["osint", "cli", "forensics", "security"]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Information Technology",
+  "Topic :: Security",
+  "Topic :: Utilities"
+]
+dependencies = [
+  "typer[all]",
+  "httpx[http2]",
+  "uvloop; platform_system != 'Windows'",
+  "aiodns",
+  "aiosmtplib",
+  "selectolax",
+  "lxml",
+  "rapidfuzz",
+  "orjson",
+  "pydantic>=2",
+  "rich",
+  "aiolimiter",
+  "email-validator",
+  "networkx",
+  "PyYAML>=6",
+  "jsonpath-ng",
+  "structlog",
+  "Pillow",
+  "ImageHash",
+  "phonenumbers"
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint"]
+headless = ["playwright"]
+stix = ["stix2"]
+http3 = ["aioquic"]
+sign = ["sigstore"]
+dev = [
+  "pytest",
+  "pytest-xdist",
+  "hypothesis",
+  "mypy",
+  "ruff",
+  "pip-audit",
+  "cyclonedx-bom"
+]
+
+[project.urls]
+Homepage = "https://github.com/DonatoReis/moriarty"
+Documentation = "https://github.com/DonatoReis/moriarty#readme"
+
+[project.scripts]
+moriarty = "moriarty.cli.app:main"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["moriarty"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+addopts = "-n auto --strict-markers"
+testpaths = ["moriarty/tests"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["moriarty"]

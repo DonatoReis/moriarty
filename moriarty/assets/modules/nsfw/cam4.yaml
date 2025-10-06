@@ -1,0 +1,28 @@
+site: cam4
+name: Cam4
+category:
+  - adult
+  - cam
+tags:
+  - adult
+  - nsfw
+  - cam
+url_template: "https://www.cam4.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profileHeader"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

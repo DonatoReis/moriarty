@@ -1,0 +1,28 @@
+site: zomato
+name: Zomato
+category:
+  - food
+  - reviews
+tags:
+  - food
+  - restaurants
+  - india
+url_template: "https://www.zomato.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".user-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

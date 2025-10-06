@@ -1,0 +1,32 @@
+site: deviantart
+name: DeviantArt
+category:
+  - creative
+  - art
+tags:
+  - art
+  - creative
+url_template: "https://www.deviantart.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-hook='user_link']"
+
+not_found_selectors:
+  - type: regex
+    query: "The page you were looking for doesn't exist"
+
+extractors:
+  - name: username
+    selector:
+      type: css
+      query: "[data-hook='user_link']"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

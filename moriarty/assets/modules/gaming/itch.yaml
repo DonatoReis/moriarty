@@ -1,0 +1,32 @@
+site: itchio
+name: itch.io
+category:
+  - gaming
+  - indie
+tags:
+  - gaming
+  - indie
+url_template: "https://{username}.itch.io"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".user_profile"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".user_name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

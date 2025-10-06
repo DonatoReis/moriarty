@@ -1,0 +1,31 @@
+site: minecraft
+name: Minecraft (NameMC)
+category:
+  - gaming
+tags:
+  - gaming
+  - minecraft
+url_template: "https://namemc.com/profile/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-header"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: uuid
+    selector:
+      type: css
+      query: ".uuid"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

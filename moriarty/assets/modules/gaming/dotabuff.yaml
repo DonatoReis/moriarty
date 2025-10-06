@@ -1,0 +1,32 @@
+site: dotabuff
+name: Dotabuff
+category:
+  - gaming
+tags:
+  - gaming
+  - dota2
+  - stats
+url_template: "https://www.dotabuff.com/players/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".player-header"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: mmr
+    selector:
+      type: css
+      query: ".mmr"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

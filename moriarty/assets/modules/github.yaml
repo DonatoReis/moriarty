@@ -1,0 +1,68 @@
+site: github
+name: GitHub
+category:
+  - social
+  - development
+tags:
+  - top20
+  - code
+url_template: "https://github.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[itemprop='name']"
+  - type: css
+    query: ".vcard-names"
+
+not_found_selectors:
+  - type: css
+    query: "#js-flash-container .flash-error"
+  - type: regex
+    query: "Not Found"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: "[itemprop='name']"
+    required: false
+  
+  - name: bio
+    selector:
+      type: css
+      query: "[data-bio-text]"
+    required: false
+  
+  - name: avatar
+    selector:
+      type: css
+      query: "img.avatar-user"
+      attribute: src
+    required: false
+  
+  - name: location
+    selector:
+      type: css
+      query: "[itemprop='homeLocation']"
+    required: false
+  
+  - name: website
+    selector:
+      type: css
+      query: "[itemprop='url']"
+      attribute: href
+    required: false
+  
+  - name: twitter
+    selector:
+      type: css
+      query: "[itemprop='social'][href*='twitter.com']"
+      attribute: href
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

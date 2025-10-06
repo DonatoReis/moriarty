@@ -1,0 +1,28 @@
+site: toptal
+name: Toptal
+category:
+  - jobs
+  - freelance
+  - professional
+tags:
+  - freelance
+  - elite
+url_template: "https://www.toptal.com/resume/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".resume"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

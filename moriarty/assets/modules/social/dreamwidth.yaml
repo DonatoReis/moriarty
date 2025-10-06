@@ -1,0 +1,26 @@
+site: dreamwidth
+name: Dreamwidth
+category:
+  - blog
+  - social
+tags:
+  - blog
+url_template: "https://{username}.dreamwidth.org/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".journal"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

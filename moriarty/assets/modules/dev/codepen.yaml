@@ -1,0 +1,34 @@
+site: codepen
+name: CodePen
+category:
+  - development
+  - creative
+tags:
+  - code
+  - dev
+url_template: "https://codepen.io/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-avatar"
+  - type: css
+    query: ".profile-name"
+
+not_found_selectors:
+  - type: regex
+    query: "Page Not Found"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".profile-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

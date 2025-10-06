@@ -1,0 +1,27 @@
+site: adultwork
+name: AdultWork
+category:
+  - adult
+tags:
+  - adult
+  - nsfw
+  - uk
+url_template: "https://www.adultwork.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

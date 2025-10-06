@@ -1,0 +1,31 @@
+site: producthunt
+name: Product Hunt
+category:
+  - professional
+  - startup
+tags:
+  - startup
+url_template: "https://www.producthunt.com/@{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-test='user-profile']"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".user-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

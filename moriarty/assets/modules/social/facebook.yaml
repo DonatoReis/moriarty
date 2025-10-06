@@ -1,0 +1,34 @@
+site: facebook
+name: Facebook
+category:
+  - social
+tags:
+  - top20
+  - popular
+url_template: "https://www.facebook.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: regex
+    query: '"profileID":"[^"]+"'
+
+not_found_selectors:
+  - type: regex
+    query: "This Page Isn't Available"
+  - type: regex
+    query: "Sorry, this content isn't available"
+
+extractors:
+  - name: name
+    selector:
+      type: regex
+      query: '"name":"([^"]+)"'
+      group: 1
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

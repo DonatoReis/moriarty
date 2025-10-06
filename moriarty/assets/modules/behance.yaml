@@ -1,0 +1,47 @@
+site: behance
+name: Behance
+category:
+  - creative
+  - design
+tags:
+  - top20
+url_template: "https://www.behance.net/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".Profile-nameAndLocation"
+  - type: css
+    query: "[data-owner-info]"
+
+not_found_selectors:
+  - type: regex
+    query: "404 - Page Not Found"
+  - type: css
+    query: ".Error404"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".Profile-nameAndLocation h1"
+    required: false
+  
+  - name: location
+    selector:
+      type: css
+      query: ".Profile-nameAndLocation .location"
+    required: false
+  
+  - name: followers
+    selector:
+      type: css
+      query: "[data-followers-count]"
+      attribute: data-followers-count
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

@@ -1,0 +1,48 @@
+site: instagram
+name: Instagram
+category:
+  - social
+tags:
+  - top20
+url_template: "https://www.instagram.com/{username}/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: regex
+    query: '"username":"[^"]+"'
+  - type: regex
+    query: '"full_name":"[^"]+"'
+
+not_found_selectors:
+  - type: regex
+    query: "Sorry, this page isn't available"
+  - type: regex
+    query: "The link you followed may be broken"
+
+extractors:
+  - name: username
+    selector:
+      type: regex
+      query: '"username":"([^"]+)"'
+      group: 1
+    required: false
+  
+  - name: name
+    selector:
+      type: regex
+      query: '"full_name":"([^"]+)"'
+      group: 1
+    required: false
+  
+  - name: bio
+    selector:
+      type: regex
+      query: '"biography":"([^"]+)"'
+      group: 1
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true

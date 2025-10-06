@@ -1,0 +1,26 @@
+site: battlenet
+name: Battle.net
+category:
+  - gaming
+tags:
+  - gaming
+  - blizzard
+url_template: "https://worldofwarcraft.com/en-us/character/us/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".character-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

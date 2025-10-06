@@ -1,0 +1,26 @@
+site: linktree
+name: Linktree
+category:
+  - profile
+  - social
+tags:
+  - link-aggregator
+url_template: "https://linktr.ee/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "#profile"
+
+not_found_selectors:
+  - type: regex
+    query: "The page you're looking for doesn't exist"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

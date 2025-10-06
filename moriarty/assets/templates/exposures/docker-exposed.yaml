@@ -1,0 +1,31 @@
+id: docker-exposed
+
+info:
+  name: Docker Files Exposure
+  author: moriarty
+  severity: medium
+  description: Detects exposed Docker configuration files
+  tags: docker,exposure
+
+requests:
+  - method: GET
+    path:
+      - "/Dockerfile"
+      - "/.dockerignore"
+      - "/docker-compose.yml"
+      - "/docker-compose.yaml"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "FROM "
+          - "RUN "
+          - "COPY "
+          - "version:"
+          - "services:"
+        condition: or
+
+      - type: status
+        status:
+          - 200

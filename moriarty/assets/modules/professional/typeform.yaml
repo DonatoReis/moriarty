@@ -1,0 +1,27 @@
+site: typeform
+name: Typeform
+category:
+  - professional
+  - forms
+tags:
+  - forms
+  - surveys
+url_template: "https://{username}.typeform.com/to/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".typeform"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

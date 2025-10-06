@@ -1,0 +1,30 @@
+site: lastfm
+name: Last.fm
+category:
+  - music
+tags:
+  - music
+url_template: "https://www.last.fm/user/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".header-title"
+
+not_found_selectors:
+  - type: regex
+    query: "This user doesn't exist"
+
+extractors:
+  - name: scrobbles
+    selector:
+      type: css
+      query: ".header-scrobble-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

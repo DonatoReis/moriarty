@@ -1,0 +1,26 @@
+site: wordpress-com
+name: WordPress.com
+category:
+  - blog
+  - writing
+tags:
+  - blog
+url_template: "https://{username}.wordpress.com/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".site"
+
+not_found_selectors:
+  - type: regex
+    query: "not found|doesn't exist"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

@@ -1,0 +1,38 @@
+id: xss-reflected
+
+info:
+  name: Reflected XSS Detection
+  author: moriarty
+  severity: high
+  description: Detects reflected XSS vulnerabilities
+  tags: xss,injection
+
+requests:
+  - method: GET
+    path:
+      - "/?q={{xss}}"
+      - "/search?query={{xss}}"
+      - "/search.php?q={{xss}}"
+
+    payloads:
+      xss:
+        - '<script>alert(1)</script>'
+        - '<img src=x onerror=alert(1)>'
+        - '"><script>alert(1)</script>'
+        - '<svg/onload=alert(1)>'
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '{{xss}}'
+
+      - type: word
+        part: header
+        words:
+          - "text/html"
+
+      - type: status
+        status:
+          - 200

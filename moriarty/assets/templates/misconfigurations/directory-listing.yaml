@@ -1,0 +1,33 @@
+id: directory-listing
+
+info:
+  name: Directory Listing Enabled
+  author: moriarty
+  severity: medium
+  description: Detects directories with listing enabled
+  tags: misconfiguration,directory-listing
+
+requests:
+  - method: GET
+    path:
+      - "/admin/"
+      - "/backup/"
+      - "/uploads/"
+      - "/files/"
+      - "/images/"
+      - "/assets/"
+      - "/temp/"
+      - "/tmp/"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Index of /"
+          - "Directory listing for"
+          - "Parent Directory"
+        condition: or
+
+      - type: status
+        status:
+          - 200

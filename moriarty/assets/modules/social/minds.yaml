@@ -1,0 +1,25 @@
+site: minds
+name: Minds
+category:
+  - social
+tags:
+  - alternative
+url_template: "https://www.minds.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".m-channel__info"
+
+not_found_selectors:
+  - type: regex
+    query: "Channel not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

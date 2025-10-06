@@ -1,0 +1,23 @@
+id: ssl-tls-weak
+
+info:
+  name: Weak SSL/TLS Configuration
+  author: moriarty
+  severity: medium
+  description: Detects weak SSL/TLS configuration
+  tags: ssl,tls,misconfiguration
+
+requests:
+  - method: GET
+    path:
+      - "/"
+
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "TLSv1.0"
+          - "TLSv1.1"
+          - "SSLv2"
+          - "SSLv3"
+        condition: or

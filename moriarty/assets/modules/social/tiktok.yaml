@@ -1,0 +1,35 @@
+site: tiktok
+name: TikTok
+category:
+  - social
+  - video
+tags:
+  - top20
+  - popular
+url_template: "https://www.tiktok.com/@{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: regex
+    query: '"uniqueId":"[^"]+"'
+
+not_found_selectors:
+  - type: regex
+    query: "Couldn't find this account"
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: username
+    selector:
+      type: regex
+      query: '"uniqueId":"([^"]+)"'
+      group: 1
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

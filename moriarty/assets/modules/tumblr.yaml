@@ -1,0 +1,40 @@
+site: tumblr
+name: Tumblr
+category:
+  - social
+  - blog
+tags:
+  - top20
+url_template: "https://{username}.tumblr.com"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".blog-title"
+  - type: css
+    query: "[data-blog-name]"
+
+not_found_selectors:
+  - type: regex
+    query: "There's nothing here"
+  - type: regex
+    query: "Whatever you were looking for doesn't currently exist"
+
+extractors:
+  - name: title
+    selector:
+      type: css
+      query: ".blog-title"
+    required: false
+  
+  - name: description
+    selector:
+      type: css
+      query: ".blog-description"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

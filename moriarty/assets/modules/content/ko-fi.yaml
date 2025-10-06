@@ -1,0 +1,32 @@
+site: kofi
+name: Ko-fi
+category:
+  - content
+  - monetization
+tags:
+  - monetization
+  - donation
+url_template: "https://ko-fi.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".kfds-c-avatar"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: display_name
+    selector:
+      type: css
+      query: ".kfds-c-profile-header__name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

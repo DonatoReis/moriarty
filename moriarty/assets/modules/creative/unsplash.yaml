@@ -1,0 +1,26 @@
+site: unsplash
+name: Unsplash
+category:
+  - photography
+  - creative
+tags:
+  - photography
+url_template: "https://unsplash.com/@{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-test='users-route']"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

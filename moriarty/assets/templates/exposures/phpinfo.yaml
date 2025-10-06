@@ -1,0 +1,36 @@
+id: phpinfo-exposure
+
+info:
+  name: PHPInfo Page Exposure
+  author: moriarty
+  severity: medium
+  description: Detects exposed phpinfo() pages
+  tags: php,exposure,info-disclosure
+
+requests:
+  - method: GET
+    path:
+      - "/phpinfo.php"
+      - "/info.php"
+      - "/test.php"
+      - "/php.php"
+      - "/infophp.php"
+      - "/i.php"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "PHP Version"
+          - "phpinfo()"
+        condition: or
+
+      - type: status
+        status:
+          - 200
+
+    extractors:
+      - type: regex
+        name: php_version
+        regex:
+          - "PHP Version ([0-9.]+)"

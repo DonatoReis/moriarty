@@ -1,0 +1,32 @@
+site: ebay
+name: eBay
+category:
+  - marketplace
+  - ecommerce
+tags:
+  - shopping
+  - auction
+url_template: "https://www.ebay.com/usr/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".seller-info"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: feedback
+    selector:
+      type: css
+      query: ".feedback-score"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

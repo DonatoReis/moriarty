@@ -1,0 +1,36 @@
+id: backup-files
+
+info:
+  name: Backup Files Exposure
+  author: moriarty
+  severity: high
+  description: Detects exposed backup files that may contain sensitive data
+  tags: backup,exposure,files
+
+requests:
+  - method: GET
+    path:
+      - "/backup.sql"
+      - "/backup.zip"
+      - "/backup.tar.gz"
+      - "/db.sql"
+      - "/database.sql"
+      - "/dump.sql"
+      - "/backup.bak"
+      - "/backup.old"
+      - "/site.tar.gz"
+      - "/www.zip"
+      - "/backup{{BaseURL}}.zip"
+
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        words:
+          - "application/zip"
+          - "application/x-tar"
+          - "application/sql"
+        part: header
+        condition: or

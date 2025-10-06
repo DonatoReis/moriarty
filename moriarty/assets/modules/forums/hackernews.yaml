@@ -1,0 +1,32 @@
+site: hackernews
+name: Hacker News
+category:
+  - forum
+  - tech
+tags:
+  - tech
+  - forum
+url_template: "https://news.ycombinator.com/user?id={username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "#hnmain"
+
+not_found_selectors:
+  - type: regex
+    query: "No such user"
+
+extractors:
+  - name: karma
+    selector:
+      type: css
+      query: ".karma"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

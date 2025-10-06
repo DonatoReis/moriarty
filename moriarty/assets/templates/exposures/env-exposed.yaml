@@ -1,0 +1,41 @@
+id: env-exposed
+
+info:
+  name: Environment File Exposure
+  author: moriarty
+  severity: critical
+  description: Detects exposed .env files containing sensitive credentials
+  tags: env,exposure,secrets
+
+requests:
+  - method: GET
+    path:
+      - "/.env"
+      - "/.env.local"
+      - "/.env.production"
+      - "/.env.dev"
+      - "/.env.backup"
+      - "/config/.env"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "DB_PASSWORD"
+          - "API_KEY"
+          - "SECRET"
+          - "AWS_"
+          - "STRIPE_"
+        condition: or
+
+      - type: status
+        status:
+          - 200
+
+    extractors:
+      - type: regex
+        name: credentials
+        regex:
+          - "([A-Z_]+)=([^\\n]+)"
+          - "password['\"]?\\s*[:=]\\s*['\"]?([^\\n'\"]+)"
+          - "api[_-]?key['\"]?\\s*[:=]\\s*['\"]?([^\\n'\"]+)"

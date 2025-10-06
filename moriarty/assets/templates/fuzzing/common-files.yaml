@@ -1,0 +1,37 @@
+id: common-files-fuzz
+
+info:
+  name: Common Sensitive Files
+  author: moriarty
+  severity: medium
+  description: Fuzzes for common sensitive files
+  tags: fuzzing,files
+
+requests:
+  - method: GET
+    path:
+      - "/robots.txt"
+      - "/sitemap.xml"
+      - "/.htaccess"
+      - "/.htpasswd"
+      - "/web.config"
+      - "/phpinfo.php"
+      - "/info.php"
+      - "/test.php"
+      - "/README.md"
+      - "/CHANGELOG.md"
+      - "/composer.json"
+      - "/package.json"
+      - "/.dockerignore"
+      - "/Dockerfile"
+      - "/.gitlab-ci.yml"
+      - "/.travis.yml"
+      - "/swagger.json"
+      - "/swagger.yaml"
+      - "/api-docs"
+      - "/graphql"
+
+    matchers:
+      - type: status
+        status:
+          - 200

@@ -1,0 +1,27 @@
+site: memrise
+name: Memrise
+category:
+  - education
+  - language
+tags:
+  - education
+  - language
+url_template: "https://www.memrise.com/user/{username}/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

@@ -1,0 +1,38 @@
+id: wordpress-default-login
+
+info:
+  name: WordPress Default Credentials
+  author: moriarty
+  severity: critical
+  description: Tests for WordPress default/weak credentials
+  tags: wordpress,default-login
+
+requests:
+  - method: POST
+    path:
+      - "/wp-login.php"
+
+    body: "log={{username}}&pwd={{password}}&wp-submit=Log+In"
+
+    payloads:
+      username:
+        - admin
+        - administrator
+        - root
+        - test
+      password:
+        - admin
+        - password
+        - 123456
+        - admin123
+
+    matchers:
+      - type: word
+        words:
+          - "Dashboard"
+          - "wp-admin"
+        condition: or
+
+      - type: status
+        status:
+          - 302

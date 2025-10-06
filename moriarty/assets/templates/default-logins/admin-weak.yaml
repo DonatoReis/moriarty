@@ -1,0 +1,40 @@
+id: admin-weak-password
+
+info:
+  name: Admin Panel Weak Credentials
+  author: moriarty
+  severity: critical
+  description: Tests common admin credentials
+  tags: default-login,bruteforce
+
+requests:
+  - method: POST
+    path:
+      - "/admin/login"
+      - "/administrator/login"
+      - "/admin.php"
+      - "/login.php"
+
+    body: "username={{user}}&password={{pass}}"
+
+    payloads:
+      user:
+        - admin
+        - administrator
+        - root
+        - admin123
+      pass:
+        - admin
+        - password
+        - 12345
+        - admin123
+        - root
+        - Password1
+
+    matchers:
+      - type: word
+        words:
+          - "dashboard"
+          - "logout"
+          - "welcome"
+        condition: or

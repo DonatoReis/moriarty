@@ -1,0 +1,39 @@
+id: sqli-error
+
+info:
+  name: SQL Injection - Error Based
+  author: moriarty
+  severity: critical
+  description: Detects error-based SQL injection vulnerabilities
+  tags: sqli,injection,database
+
+requests:
+  - method: GET
+    path:
+      - "/?id={{sqli}}"
+      - "/product.php?id={{sqli}}"
+      - "/user.php?id={{sqli}}"
+
+    payloads:
+      sqli:
+        - "'"
+        - "''"
+        - "' OR '1'='1"
+        - "1' AND '1'='1"
+        - "1' AND '1'='2"
+
+    matchers:
+      - type: regex
+        regex:
+          - "SQL syntax.*MySQL"
+          - "Warning.*mysql_"
+          - "MySqlException"
+          - "PostgreSQL.*ERROR"
+          - "Warning.*pg_"
+          - "valid PostgreSQL result"
+          - "Microsoft SQL.*Driver"
+          - "ODBC SQL Server"
+          - "SQLServer JDBC Driver"
+          - "Oracle error"
+          - "ORA-[0-9]+"
+        condition: or

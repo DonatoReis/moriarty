@@ -1,0 +1,28 @@
+site: adultfriendfinder
+name: Adult Friend Finder
+category:
+  - dating
+  - adult
+tags:
+  - dating
+  - nsfw
+  - adult
+url_template: "https://adultfriendfinder.com/p/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

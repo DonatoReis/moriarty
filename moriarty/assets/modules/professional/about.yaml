@@ -1,0 +1,31 @@
+site: aboutme
+name: About.me
+category:
+  - professional
+  - profile
+tags:
+  - profile
+url_template: "https://about.me/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-header"
+
+not_found_selectors:
+  - type: regex
+    query: "This page doesn't exist"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

@@ -1,0 +1,28 @@
+site: beatport
+name: Beatport
+category:
+  - music
+  - dj
+tags:
+  - music
+  - electronic
+  - dj
+url_template: "https://www.beatport.com/artist/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".artist-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

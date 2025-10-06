@@ -1,0 +1,32 @@
+site: opgg
+name: OP.GG
+category:
+  - gaming
+tags:
+  - gaming
+  - lol
+  - stats
+url_template: "https://www.op.gg/summoners/na/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".summoner-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: rank
+    selector:
+      type: css
+      query: ".rank"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

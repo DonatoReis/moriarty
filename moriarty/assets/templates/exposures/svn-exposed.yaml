@@ -1,0 +1,28 @@
+id: svn-exposed
+
+info:
+  name: SVN Repository Exposure
+  author: moriarty
+  severity: high
+  description: Detects exposed SVN repositories
+  tags: svn,exposure,vcs
+
+requests:
+  - method: GET
+    path:
+      - "/.svn/entries"
+      - "/.svn/wc.db"
+      - "/.svn/all-wcprops"
+
+    matchers:
+      - type: word
+        words:
+          - "svn:special"
+          - "svn:externals"
+          - "dir"
+          - "file"
+        condition: or
+
+      - type: status
+        status:
+          - 200

@@ -1,0 +1,33 @@
+site: bitcointalk
+name: BitcoinTalk
+category:
+  - crypto
+  - forum
+tags:
+  - crypto
+  - bitcoin
+  - forum
+url_template: "https://bitcointalk.org/index.php?action=profile;u={username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: posts
+    selector:
+      type: css
+      query: ".post-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

@@ -1,0 +1,41 @@
+id: git-exposed
+
+info:
+  name: Git Repository Exposure
+  author: moriarty
+  severity: high
+  description: Detects exposed .git directories that can leak sensitive information
+  tags: git,exposure,misconfiguration
+
+requests:
+  - method: GET
+    path:
+      - "/.git/config"
+      - "/.git/HEAD"
+      - "/.git/index"
+      - "/.git/logs/HEAD"
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "[core]"
+          - "[remote"
+          - "repositoryformatversion"
+        condition: or
+
+      - type: word
+        words:
+          - "ref:"
+          - "refs/heads"
+
+      - type: status
+        status:
+          - 200
+
+    extractors:
+      - type: regex
+        name: repo_url
+        regex:
+          - 'url = (.+)'
+          - 'https?://[^\s]+'

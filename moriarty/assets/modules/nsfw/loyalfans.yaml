@@ -1,0 +1,28 @@
+site: loyalfans
+name: LoyalFans
+category:
+  - adult
+  - content
+tags:
+  - adult
+  - nsfw
+  - subscription
+url_template: "https://www.loyalfans.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

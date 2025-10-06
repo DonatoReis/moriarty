@@ -1,0 +1,30 @@
+site: bandcamp
+name: Bandcamp
+category:
+  - music
+tags:
+  - music
+url_template: "https://{username}.bandcamp.com"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "#band-name-location"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors:
+  - name: band_name
+    selector:
+      type: css
+      query: ".band-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

@@ -1,0 +1,39 @@
+site: twitter
+name: Twitter/X
+category:
+  - social
+tags:
+  - top20
+url_template: "https://twitter.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: regex
+    query: '"screen_name":"[^"]+"'
+
+not_found_selectors:
+  - type: regex
+    query: "This account doesn't exist"
+  - type: regex
+    query: "Account suspended"
+
+extractors:
+  - name: screen_name
+    selector:
+      type: regex
+      query: '"screen_name":"([^"]+)"'
+      group: 1
+    required: false
+  
+  - name: name
+    selector:
+      type: regex
+      query: '"name":"([^"]+)"'
+      group: 1
+    required: false
+
+require_headless: true
+rate_limit_per_second: 1.0
+enabled: false

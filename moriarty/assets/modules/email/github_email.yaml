@@ -1,0 +1,40 @@
+site: github_commits
+name: GitHub Commits (Email Search)
+category:
+  - development
+tags:
+  - email
+  - code
+url_template: "https://github.com/search?q={email}&type=commits"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".commit-author"
+  - type: css
+    query: "[data-hovercard-type='user']"
+
+not_found_selectors:
+  - type: regex
+    query: "We couldn't find any commits"
+  - type: css
+    query: ".blankslate"
+
+extractors:
+  - name: author
+    selector:
+      type: css
+      query: ".commit-author"
+    required: false
+  
+  - name: username
+    selector:
+      type: css
+      query: "[data-hovercard-type='user']"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true

@@ -1,0 +1,33 @@
+site: strava
+name: Strava
+category:
+  - fitness
+  - sports
+tags:
+  - fitness
+  - running
+  - cycling
+url_template: "https://www.strava.com/athletes/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".athlete-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: activities
+    selector:
+      type: css
+      query: ".activity-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

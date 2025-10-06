@@ -1,0 +1,25 @@
+site: snapchat
+name: Snapchat
+category:
+  - social
+tags:
+  - top20
+url_template: "https://www.snapchat.com/add/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-username]"
+
+not_found_selectors:
+  - type: regex
+    query: "Sorry! We couldn't find"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

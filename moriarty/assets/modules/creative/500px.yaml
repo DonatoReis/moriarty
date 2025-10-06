@@ -1,0 +1,31 @@
+site: 500px
+name: 500px
+category:
+  - photography
+  - creative
+tags:
+  - photography
+url_template: "https://500px.com/p/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile_header"
+
+not_found_selectors:
+  - type: regex
+    query: "Oops! We can't find that page"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".profile_name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

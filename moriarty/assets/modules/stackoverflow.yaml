@@ -1,0 +1,47 @@
+site: stackoverflow
+name: Stack Overflow
+category:
+  - development
+  - professional
+tags:
+  - top20
+  - code
+url_template: "https://stackoverflow.com/users/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".user-card"
+  - type: css
+    query: "#user-card"
+
+not_found_selectors:
+  - type: regex
+    query: "User not found"
+  - type: css
+    query: ".error-page"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".user-card-name"
+    required: false
+  
+  - name: location
+    selector:
+      type: css
+      query: ".user-card-location"
+    required: false
+  
+  - name: reputation
+    selector:
+      type: css
+      query: ".reputation-score"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

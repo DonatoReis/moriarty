@@ -1,0 +1,26 @@
+site: calendly
+name: Calendly
+category:
+  - professional
+  - scheduling
+tags:
+  - scheduling
+url_template: "https://calendly.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".booking-page"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

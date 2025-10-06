@@ -1,0 +1,34 @@
+id: database-files
+
+info:
+  name: Database Files Exposure
+  author: moriarty
+  severity: critical
+  description: Detects exposed database files
+  tags: database,exposure
+
+requests:
+  - method: GET
+    path:
+      - "/database.sql"
+      - "/db.sql"
+      - "/dump.sql"
+      - "/backup.sql"
+      - "/mysql.sql"
+      - "/database.db"
+      - "/db.sqlite"
+      - "/db.sqlite3"
+      - "/data.db"
+
+    matchers:
+      - type: word
+        words:
+          - "INSERT INTO"
+          - "CREATE TABLE"
+          - "DROP TABLE"
+          - "SQLite format"
+        condition: or
+
+      - type: status
+        status:
+          - 200

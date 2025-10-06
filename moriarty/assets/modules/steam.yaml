@@ -1,0 +1,47 @@
+site: steam
+name: Steam
+category:
+  - gaming
+  - social
+tags:
+  - top20
+url_template: "https://steamcommunity.com/id/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile_header"
+  - type: css
+    query: ".playerAvatar"
+
+not_found_selectors:
+  - type: regex
+    query: "The specified profile could not be found"
+  - type: css
+    query: ".error_ctn"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".actual_persona_name"
+    required: false
+  
+  - name: location
+    selector:
+      type: css
+      query: ".header_real_name"
+    required: false
+  
+  - name: avatar
+    selector:
+      type: css
+      query: ".playerAvatarAutoSizeInner img"
+      attribute: src
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

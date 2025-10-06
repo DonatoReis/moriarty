@@ -1,0 +1,32 @@
+site: opensea
+name: OpenSea
+category:
+  - crypto
+  - nft
+tags:
+  - nft
+  - ethereum
+url_template: "https://opensea.io/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-header"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: nfts
+    selector:
+      type: css
+      query: ".item-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.0
+enabled: true
+nsfw: false

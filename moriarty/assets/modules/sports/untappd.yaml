@@ -1,0 +1,32 @@
+site: untappd
+name: Untappd
+category:
+  - social
+  - beer
+tags:
+  - beer
+  - social
+url_template: "https://untappd.com/user/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".user-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: beers
+    selector:
+      type: css
+      query: ".beer-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

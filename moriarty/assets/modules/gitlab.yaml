@@ -1,0 +1,60 @@
+site: gitlab
+name: GitLab
+category:
+  - development
+tags:
+  - top20
+  - code
+url_template: "https://gitlab.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-header"
+  - type: css
+    query: ".user-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "The resource you were looking for doesn't exist"
+  - type: css
+    query: ".nothing-here-block"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".profile-header .gl-font-size-h1"
+    required: false
+  
+  - name: bio
+    selector:
+      type: css
+      query: ".profile-user-bio"
+    required: false
+  
+  - name: avatar
+    selector:
+      type: css
+      query: ".avatar-tile img"
+      attribute: src
+    required: false
+  
+  - name: location
+    selector:
+      type: css
+      query: "[data-testid='user_profile_location']"
+    required: false
+  
+  - name: website
+    selector:
+      type: css
+      query: ".profile-link"
+      attribute: href
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true

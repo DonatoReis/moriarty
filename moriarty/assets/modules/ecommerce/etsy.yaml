@@ -1,0 +1,32 @@
+site: etsy
+name: Etsy
+category:
+  - ecommerce
+  - creative
+tags:
+  - shop
+  - marketplace
+url_template: "https://www.etsy.com/people/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".shop-home"
+
+not_found_selectors:
+  - type: regex
+    query: "Sorry, we couldn't find that page"
+
+extractors:
+  - name: shop_name
+    selector:
+      type: css
+      query: ".shop-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

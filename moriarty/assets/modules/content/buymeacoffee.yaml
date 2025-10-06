@@ -1,0 +1,27 @@
+site: buymeacoffee
+name: Buy Me a Coffee
+category:
+  - content
+  - monetization
+tags:
+  - monetization
+  - donation
+url_template: "https://www.buymeacoffee.com/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".creator-page"
+
+not_found_selectors:
+  - type: regex
+    query: "Page not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

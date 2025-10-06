@@ -1,0 +1,32 @@
+site: pornhub
+name: Pornhub
+category:
+  - adult
+  - video
+tags:
+  - adult
+  - nsfw
+url_template: "https://www.pornhub.com/users/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profileUserName"
+
+not_found_selectors:
+  - type: regex
+    query: "This user does not exist"
+
+extractors:
+  - name: username
+    selector:
+      type: css
+      query: ".profileUserName"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 0.5
+enabled: true
+nsfw: true

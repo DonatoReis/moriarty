@@ -1,0 +1,35 @@
+site: telegram
+name: Telegram
+category:
+  - messaging
+  - social
+tags:
+  - messaging
+url_template: "https://t.me/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".tgme_page_photo"
+  - type: css
+    query: ".tgme_page_title"
+
+not_found_selectors:
+  - type: regex
+    query: "If you have <strong>Telegram</strong>, you can contact"
+  - type: css
+    query: ".tgme_page_action"
+
+extractors:
+  - name: title
+    selector:
+      type: css
+      query: ".tgme_page_title"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

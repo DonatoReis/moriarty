@@ -1,0 +1,31 @@
+id: open-redirect
+
+info:
+  name: Open Redirect
+  author: moriarty
+  severity: medium
+  description: Detects open redirect vulnerabilities
+  tags: redirect,injection
+
+requests:
+  - method: GET
+    path:
+      - "/?redirect=https://evil.com"
+      - "/?url=https://evil.com"
+      - "/?next=https://evil.com"
+      - "/redirect?url=https://evil.com"
+      - "/login?next=https://evil.com"
+
+    matchers:
+      - type: status
+        status:
+          - 301
+          - 302
+          - 303
+          - 307
+          - 308
+
+      - type: word
+        part: header
+        words:
+          - "evil.com"

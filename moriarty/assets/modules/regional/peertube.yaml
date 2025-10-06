@@ -1,0 +1,26 @@
+site: peertube
+name: PeerTube
+category:
+  - video
+tags:
+  - fediverse
+  - video
+url_template: "https://peertube.tv/accounts/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".account-info"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

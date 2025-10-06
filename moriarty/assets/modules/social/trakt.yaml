@@ -1,0 +1,28 @@
+site: trakt
+name: Trakt
+category:
+  - movies
+  - tv
+tags:
+  - movies
+  - tv
+  - tracking
+url_template: "https://trakt.tv/users/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".user-profile"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

@@ -1,0 +1,39 @@
+id: api-endpoints-fuzz
+
+info:
+  name: API Endpoints Discovery
+  author: moriarty
+  severity: info
+  description: Discovers common API endpoints
+  tags: fuzzing,api
+
+requests:
+  - method: GET
+    path:
+      - "/api"
+      - "/api/v1"
+      - "/api/v2"
+      - "/api/v3"
+      - "/v1/api"
+      - "/v2/api"
+      - "/rest"
+      - "/rest/v1"
+      - "/rest/api"
+      - "/graphql"
+      - "/graphiql"
+      - "/api/graphql"
+      - "/api-docs"
+      - "/swagger"
+      - "/swagger.json"
+      - "/swagger.yaml"
+      - "/swagger-ui"
+      - "/openapi.json"
+      - "/docs"
+      - "/redoc"
+
+    matchers:
+      - type: status
+        status:
+          - 200
+          - 401
+          - 403

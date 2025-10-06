@@ -1,0 +1,26 @@
+site: castbox
+name: Castbox
+category:
+  - podcasts
+  - audio
+tags:
+  - podcasts
+url_template: "https://castbox.fm/channel/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".channel"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

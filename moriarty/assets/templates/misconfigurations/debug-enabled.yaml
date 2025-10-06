@@ -1,0 +1,29 @@
+id: debug-enabled
+
+info:
+  name: Debug Mode Enabled
+  author: moriarty
+  severity: high
+  description: Detects applications with debug mode enabled
+  tags: misconfiguration,debug
+
+requests:
+  - method: GET
+    path:
+      - "/"
+      - "/index.php"
+      - "/index.asp"
+      - "/index.aspx"
+
+    matchers:
+      - type: word
+        words:
+          - "DEBUG = True"
+          - "debug mode is on"
+          - "Debugger is active"
+          - "APP_DEBUG=true"
+          - "display_errors = On"
+          - "Symfony Profiler"
+          - "Laravel Debugbar"
+          - "Stack trace:"
+        condition: or

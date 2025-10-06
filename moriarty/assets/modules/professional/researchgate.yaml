@@ -1,0 +1,32 @@
+site: researchgate
+name: ResearchGate
+category:
+  - professional
+  - academic
+tags:
+  - academic
+  - research
+url_template: "https://www.researchgate.net/profile/{username}"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".profile-header"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors:
+  - name: publications
+    selector:
+      type: css
+      query: ".publication-count"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false

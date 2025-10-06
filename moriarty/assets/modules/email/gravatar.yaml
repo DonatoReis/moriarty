@@ -1,0 +1,23 @@
+site: gravatar
+name: Gravatar
+category:
+  - profile
+  - avatar
+tags:
+  - email
+url_template: "https://www.gravatar.com/avatar/{email_hash}?d=404&s=200"
+method: GET
+headers:
+  Accept: image/*
+
+exists_selectors:
+  - type: regex
+    query: "."
+
+not_found_selectors: []
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 5.0
+enabled: true

@@ -1,0 +1,35 @@
+site: bitbucket
+name: Bitbucket
+category:
+  - development
+tags:
+  - code
+  - dev
+url_template: "https://bitbucket.org/{username}/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: "[data-username]"
+  - type: css
+    query: ".avatar"
+
+not_found_selectors:
+  - type: regex
+    query: "There is no user with this username"
+  - type: css
+    query: ".error-page"
+
+extractors:
+  - name: name
+    selector:
+      type: css
+      query: ".account-name"
+    required: false
+
+require_headless: false
+rate_limit_per_second: 2.0
+enabled: true
+nsfw: false

@@ -1,0 +1,30 @@
+id: cors-misconfiguration
+
+info:
+  name: CORS Misconfiguration
+  author: moriarty
+  severity: medium
+  description: Detects insecure CORS configuration
+  tags: cors,misconfiguration
+
+requests:
+  - method: GET
+    path:
+      - "/"
+
+    headers:
+      Origin: https://evil.com
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Origin: https://evil.com"
+          - "Access-Control-Allow-Origin: *"
+        condition: or
+
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Credentials: true"

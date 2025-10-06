@@ -1,0 +1,26 @@
+site: podbean
+name: Podbean
+category:
+  - podcasts
+  - audio
+tags:
+  - podcasts
+url_template: "https://{username}.podbean.com/"
+method: GET
+headers:
+  Accept: text/html
+
+exists_selectors:
+  - type: css
+    query: ".podcast"
+
+not_found_selectors:
+  - type: regex
+    query: "not found"
+
+extractors: []
+
+require_headless: false
+rate_limit_per_second: 1.5
+enabled: true
+nsfw: false
