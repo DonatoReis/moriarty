@@ -70,10 +70,10 @@
 ### Instalação via pipx (recomendado para usuários)
 ```bash
 # Instalar usando pipx (recomendado para isolar o ambiente)
-pipx install moriarty
+pipx install moriarty-osint
 
 # OU para instalar uma versão específica
-# pipx install moriarty==1.0.0
+# pipx install moriarty-osint 0.1.5
 
 # Verificar a instalação
 moriarty --help
@@ -82,7 +82,7 @@ moriarty --help
 ### Instalação via pip (usuários avançados)
 ```bash
 # Instalar globalmente
-pip install moriarty
+pip install moriarty-osint
 
 # OU para instalar para o usuário atual
 # pip install --user moriarty
