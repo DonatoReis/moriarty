@@ -1,15 +1,26 @@
 # Moriarty - Ferramenta Avançada de OSINT e Segurança
 
-<p align="center">
-  <a href="https://pypi.org/project/moriarty-osint/"><img src="https://i.ibb.co/jsY8Njn/upscalemedia-transformed-2.png" alt="Moriarty OSINT" style="max-width: 100%;"></a>
-  <br>
-  <span>Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração.</span>
-  <br>
-  
-  [![PyPI version](https://badge.fury.io/py/moriarty-osint.svg)](https://badge.fury.io/py/moriarty-osint)
-  [![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-</p>
+<div align="center">
+  <a href="https://pypi.org/project/moriarty-osint/">
+    <img 
+      src="https://raw.githubusercontent.com/DonatoReis/moriarty/9b23814266b05438c7809a510c613d79edfdc274/assets/img/moriarty-banner.png" 
+      alt="Moriarty OSINT - Ferramenta avançada de reconhecimento e análise de segurança"
+      width="80%"
+      style="border: 1px solid #2d2d2d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
+    >
+  </a>
+
+  <p align="center">
+    <span>Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração.</span>
+  </p>
+
+  <p align="center">
+    [![PyPI version](https://img.shields.io/pypi/v/moriarty-osint?color=blue&label=PyPI)](https://pypi.org/project/moriarty-osint/)
+    [![Python Version](https://img.shields.io/pypi/pyversions/moriarty-osint?color=blue)](https://www.python.org/downloads/)
+    [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+    [![GitHub stars](https://img.shields.io/github/stars/DonatoReis/moriarty?style=social)](https://github.com/DonatoReis/moriarty/stargazers)
+  </p>
+</div>
 
 <p align="center">
   <a href="#instalação">Instalação</a>
