@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moriarty-osint"
-version = "0.1.3"
+version = "0.1.4"
 description = "Client-side OSINT toolkit with forensic-grade evidence handling."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -31,19 +31,15 @@ dependencies = [
   "aiosmtplib",
   "selectolax",
   "lxml",
-  "rapidfuzz",
   "orjson",
   "pydantic>=2",
   "rich",
-  "aiolimiter",
   "email-validator",
-  "networkx",
   "PyYAML>=6",
-  "jsonpath-ng",
   "structlog",
   "Pillow",
-  "ImageHash",
-  "phonenumbers"
+  "phonenumbers",
+  "scapy"
 ]
 
 [project.optional-dependencies]
@@ -59,7 +55,8 @@ dev = [
   "mypy",
   "ruff",
   "pip-audit",
-  "cyclonedx-bom"
+  "cyclonedx-bom",
+  "deptry>=0.23.0"
 ]
 
 [project.urls]
