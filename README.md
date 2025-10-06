@@ -6,7 +6,7 @@
     <img
       src="./assets/img/moriarty-banner.png"
       alt="Moriarty OSINT - Ferramenta avançada de reconhecimento e análise de segurança"
-      width="80%"
+      width="60%"
       style="border: 1px solid #2d2d2d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   </a>
 </p>
