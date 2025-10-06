@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moriarty-osint"
-version = "0.1.0"
+version = "0.1.1"
 description = "Client-side OSINT toolkit with forensic-grade evidence handling."
 readme = "README.md"
 requires-python = ">=3.13"
