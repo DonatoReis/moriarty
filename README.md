@@ -2,7 +2,7 @@
 
 <!-- Banner -->
 <p align="center">
-  <a href="https://pypi.org/project/moriarty-osint/">
+  <a href="https://pypi.org/project/moriarty-project/">
     <img
       src="./assets/img/moriarty-banner.png"
       alt="Moriarty OSINT - Ferramenta avançada de reconhecimento e análise de segurança"
@@ -18,11 +18,11 @@
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://pypi.org/project/moriarty-osint/">
-    <img src="https://img.shields.io/pypi/v/moriarty-osint?color=blue&label=PyPI" alt="PyPI version">
+  <a href="https://pypi.org/project/moriarty-project/">
+    <img src="https://img.shields.io/pypi/v/moriarty-project?color=blue&label=PyPI" alt="PyPI version">
   </a>
   <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/pypi/pyversions/moriarty-osint?color=blue" alt="Python Versions">
+    <img src="https://img.shields.io/pypi/pyversions/moriarty-project?color=blue" alt="Python Versions">
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
@@ -70,10 +70,10 @@
 ### Instalação via pipx (recomendado para usuários)
 ```bash
 # Instalar usando pipx (recomendado para isolar o ambiente)
-pipx install moriarty-osint
+pipx install moriarty-project
 
 # OU para instalar uma versão específica
-# pipx install moriarty-osint 0.1.5
+# pipx install moriarty-project 0.1.5
 
 # Verificar a instalação
 moriarty --help
@@ -82,7 +82,7 @@ moriarty --help
 ### Instalação via pip (usuários avançados)
 ```bash
 # Instalar globalmente
-pip install moriarty-osint
+pip install moriarty-project
 
 # OU para instalar para o usuário atual
 # pip install --user moriarty
