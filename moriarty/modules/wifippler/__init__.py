@@ -29,6 +29,7 @@ from .core.utils import (
     restore_network_interface,
     get_monitor_interfaces,
     start_monitor_mode,
+    get_wireless_interfaces,
     stop_monitor_mode
 )
 
@@ -54,6 +55,7 @@ __all__ = [
     'set_monitor_mode',
     'restore_network_interface',
     'get_monitor_interfaces',
+    'get_wireless_interfaces',
     'start_monitor_mode',
     'stop_monitor_mode',
     
