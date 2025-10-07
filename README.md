@@ -19,7 +19,7 @@
 <!-- Badges -->
 <p align="center">
   <a href="https://pypi.org/project/moriarty-project/">
-    <img src="https://img.shields.io/badge/version-0.1.20-blue" alt="Version 0.1.20">
+    <img src="https://img.shields.io/badge/version-0.1.21-blue" alt="Version 0.1.21">
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/pypi/pyversions/moriarty-project?color=blue" alt="Python Versions">

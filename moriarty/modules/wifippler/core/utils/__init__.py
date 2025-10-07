@@ -1,62 +1,76 @@
 """
-Utilitários para o módulo WiFiPPLER.
+Módulo de utilidades do WiFiPPLER.
+
+Este módulo fornece funções auxiliares para operações comuns de rede e sistema.
 """
-import os
-import sys
-import re
-import subprocess
-import shlex
-import shutil
-import logging
-import fcntl
-import struct
-import array
-import platform
-import asyncio
-from .utils import (
-    is_root,
-    get_wireless_interfaces,
-    get_network_interfaces,
-    get_monitor_interfaces,
-    set_monitor_mode,
-    restore_network_interface,
-    start_monitor_mode,
-    stop_monitor_mode,
-    run_command_async,
-    randomize_mac,
-    get_interface_mac,
+from typing import Optional, List, Dict, Any
+
+# Importações principais
+from .network import (
     get_interface_ip,
     get_interface_netmask,
     get_interface_gateway,
     is_wireless_interface,
-    get_interface_signal,
-    get_interface_ssid,
-    get_interface_channel,
-    get_interface_bitrate,
-    create_deauth_packet,
-    parse_airodump_csv,
-    parse_airodump_stations,
-    run_command,
-    command_exists
+    get_network_interfaces,
+    is_interface_up,
+    get_interface_mac
 )
-from dataclasses import asdict
 
-import netifaces
-import psutil
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from .system import (
+    is_root,
+    check_dependencies,
+    command_exists,
+    ensure_root,
+    ensure_dependencies,
+    get_available_interfaces,
+    get_wireless_interfaces
+)
 
-from ..models.network import WiFiNetwork, WiFiClient, WiFiSecurityType, WiFiCipherType, WiFiAuthType
+from .exec import (
+    run_command,
+    run_command_async,
+    run_sudo_command,
+    command_success,
+    get_command_output,
+    get_command_output_safe
+)
 
 # Configuração de logging
+import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-console = Console()
 
-# Constantes
-WIRELESS_EXT = "SIOCGIWNAME"
-SIOCGIFHWADDR = 0x8927
-SIOCGIFADDR = 0x8915
+# Exporta apenas o que é necessário para uso externo
+__all__ = [
+    # Funções de rede
+    'get_interface_ip',
+    'get_interface_netmask',
+    'get_interface_gateway',
+    'is_wireless_interface',
+    'get_network_interfaces',
+    'is_interface_up',
+    'get_interface_mac',
+    
+    # Funções do sistema
+    'is_root',
+    'check_dependencies',
+    'command_exists',
+    'ensure_root',
+    'ensure_dependencies',
+    'get_available_interfaces',
+    'get_wireless_interfaces',
+    
+    # Funções de execução de comandos
+    'run_command',
+    'run_command_async',
+    'run_sudo_command',
+    'command_success',
+    'get_command_output',
+    'get_command_output_safe',
+    
+    # Logger
+    'logger'
+]
 SIOCGIFNETMASK = 0x891B
 SIOCGIFBRDADDR = 0x8919
 SIOCGIFMTU = 0x8921

