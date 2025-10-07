@@ -36,7 +36,7 @@ def main(
     version: bool = typer.Option(
         None, 
         "--version", 
-        "-v", 
+        "-V",  # Mudando de -v para -V para evitar conflito com --verbose
         callback=version_callback,
         is_eager=True,
         help="Show version and exit.",
@@ -60,7 +60,7 @@ def main(
     ),
     output: str | None = typer.Option(None, help="Path to export artifacts."),
     redact: bool = typer.Option(True, "--redact/--no-redact", help="Redact PII in output."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging."),
+    verbose: bool = typer.Option(False, "--verbose", help="Enable verbose logging."),  # Removendo o atalho -v para evitar duplicação
     quiet: bool = typer.Option(False, help="Suppress non-critical output."),
     professional_mode: bool = typer.Option(False, help="Enable professional mode safeguards."),
     seed: int | None = typer.Option(None, help="Deterministic seed for planners."),
