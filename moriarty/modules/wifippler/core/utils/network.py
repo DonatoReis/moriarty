@@ -189,13 +189,12 @@ def get_interface_mtu(interface: str) -> int:
     """
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        return struct.unpack('I', fcntl.ioctl(
-            s.fileno(),
-            SIOCGIFMTU,
-            struct.pack('256s', interface[:15].encode('utf-8'))
-        )[16:20])[0]
-    except (IOError, OSError):
-        return 1500  # MTU padrão
+        ifreq = struct.pack('256s', interface.encode('utf-8')[:15])
+        mtu = fcntl.ioctl(s.fileno(), SIOCGIFMTU, ifreq)
+        return struct.unpack('H', mtu[16:18])[0]
+    except (IOError, OSError, struct.error):
+        return 1500  # Valor padrão para MTU
+
 
 def get_network_interfaces() -> List[Dict[str, Any]]:
     """Obtém uma lista de todas as interfaces de rede.
@@ -205,19 +204,59 @@ def get_network_interfaces() -> List[Dict[str, Any]]:
     """
     interfaces = []
     
-    # Lista todos os diretórios em /sys/class/net
-    for iface in os.listdir('/sys/class/net'):
-        # Ignora interfaces de loopback
-        if iface == 'lo':
-            continue
+    try:
+        # Lista todos os diretórios em /sys/class/net
+        for iface in os.listdir('/sys/class/net'):
+            if iface == 'lo':  # Ignora a interface de loopback
+                continue
+                
+            # Verifica se é uma interface wireless
+            is_wireless = is_wireless_interface(iface)
             
-        interfaces.append({
-            'name': iface,
-            'mac': get_interface_mac(iface),
-            'ip': get_interface_ip(iface),
-            'wireless': is_wireless_interface(iface),
-            'up': is_interface_up(iface),
-            'mtu': get_interface_mtu(iface)
-        })
+            interfaces.append({
+                'name': iface,
+                'mac': get_interface_mac(iface),
+                'ip': get_interface_ip(iface),
+                'wireless': is_wireless,
+                'up': is_interface_up(iface),
+                'mtu': get_interface_mtu(iface)
+            })
+    except Exception as e:
+        print(f"Erro ao listar interfaces de rede: {e}")
     
     return interfaces
+
+
+def get_monitor_interfaces() -> List[Dict[str, Any]]:
+    """Obtém uma lista de interfaces de rede em modo monitor.
+    
+    Returns:
+        List[Dict[str, Any]]: Lista de dicionários com informações das interfaces em modo monitor
+    """
+    monitor_interfaces = []
+    
+    try:
+        # Obtém todas as interfaces de rede
+        interfaces = get_network_interfaces()
+        
+        # Filtra apenas as interfaces sem fio
+        wireless_interfaces = [iface for iface in interfaces if iface.get('wireless')]
+        
+        # Verifica quais interfaces estão em modo monitor
+        for iface in wireless_interfaces:
+            ifname = iface['name']
+            
+            # Verifica se a interface está em modo monitor
+            try:
+                with open(f'/sys/class/net/{ifname}/type', 'r') as f:
+                    iftype = int(f.read().strip())
+                    # O tipo 803 indica modo monitor (IEEE80211_IF_TYPE_MONITOR)
+                    if iftype == 803:
+                        monitor_interfaces.append(iface)
+            except (IOError, ValueError):
+                continue
+                
+    except Exception as e:
+        print(f"Erro ao listar interfaces em modo monitor: {e}")
+    
+    return monitor_interfaces

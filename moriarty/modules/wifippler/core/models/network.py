@@ -21,6 +21,30 @@ class WiFiSecurityType(Enum):
     WPS = auto()   # WiFi Protected Setup
 
 
+# Mapeamento de códigos de segurança para WiFiSecurityType
+SECURITY_MAP = {
+    'WPA2': WiFiSecurityType.WPA2,
+    'WPA3': WiFiSecurityType.WPA3,
+    'WPA2-EAP': WiFiSecurityType.WPA2_ENTERPRISE,
+    'WPA3-EAP': WiFiSecurityType.WPA3_ENTERPRISE,
+    'WEP': WiFiSecurityType.WEP,
+    'OPEN': WiFiSecurityType.NONE,
+    'NONE': WiFiSecurityType.NONE,
+    'WPA': WiFiSecurityType.WPA,
+    'WPA2-PSK': WiFiSecurityType.WPA2,
+    'WPA3-PSK': WiFiSecurityType.WPA3,
+    'WPA2-PSK-CCMP': WiFiSecurityType.WPA2,
+    'WPA2-PSK-TKIP': WiFiSecurityType.WPA2,
+    'WPA-PSK': WiFiSecurityType.WPA,
+    'WPA-PSK-CCMP': WiFiSecurityType.WPA,
+    'WPA-PSK-TKIP': WiFiSecurityType.WPA,
+    'WPA2-ENTERPRISE': WiFiSecurityType.WPA2_ENTERPRISE,
+    'WPA3-ENTERPRISE': WiFiSecurityType.WPA3_ENTERPRISE,
+    'OWE': WiFiSecurityType.OWE,
+    'WPS': WiFiSecurityType.WPS,
+}
+
+
 class WiFiCipherType(Enum):
     """Tipos de cifra suportados."""
     NONE = auto()

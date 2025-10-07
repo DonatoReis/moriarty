@@ -3,9 +3,13 @@ Módulo de utilidades do WiFiPPLER.
 
 Este módulo fornece funções auxiliares para operações comuns de rede e sistema.
 """
-from typing import Optional, List, Dict, Any
+import os
+import subprocess
+from typing import Optional, List, Dict, Any, Union
 
 # Importações principais
+from ..models.network import WiFiCipherType, WiFiAuthType, WiFiNetwork, WiFiClient
+
 from .network import (
     get_interface_ip,
     get_interface_netmask,
@@ -13,7 +17,8 @@ from .network import (
     is_wireless_interface,
     get_network_interfaces,
     is_interface_up,
-    get_interface_mac
+    get_interface_mac,
+    get_monitor_interfaces
 )
 
 from .system import (
@@ -79,24 +84,7 @@ SIOCGIFNAME = 0x8910
 SIOCGIFFLAGS = 0x8913
 SIOCSIFFLAGS = 0x8914
 
-# Mapeamento de códigos de segurança
-SECURITY_MAP = {
-    'WPA2': WiFiSecurityType.WPA2,
-    'WPA3': WiFiSecurityType.WPA3,
-    'WPA2-EAP': WiFiSecurityType.WPA2_ENTERPRISE,
-    'WPA3-EAP': WiFiSecurityType.WPA3_ENTERPRISE,
-    'WEP': WiFiSecurityType.WEP,
-    'OPEN': WiFiSecurityType.NONE,
-    'NONE': WiFiSecurityType.NONE,
-    'WPA': WiFiSecurityType.WPA,
-    'WPA2-PSK': WiFiSecurityType.WPA2,
-    'WPA3-PSK': WiFiSecurityType.WPA3,
-    'WPA2-PSK-CCMP': WiFiSecurityType.WPA2,
-    'WPA2-PSK-TKIP': WiFiSecurityType.WPA2,
-    'WPA-PSK': WiFiSecurityType.WPA,
-    'WPA-PSK-CCMP': WiFiSecurityType.WPA,
-    'WPA-PSK-TKIP': WiFiSecurityType.WPA,
-}
+# O mapeamento de códigos de segurança foi movido para core/models/network.py
 
 # Mapeamento de cifras
 CIPHER_MAP = {

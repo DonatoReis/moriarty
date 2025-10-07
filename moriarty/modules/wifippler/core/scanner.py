@@ -33,6 +33,10 @@ from moriarty.modules.wifippler.core.utils import (
     randomize_mac, get_wireless_interfaces
 )
 
+from moriarty.modules.wifippler.core.models.network import (
+    WiFiSecurityType, SECURITY_MAP
+)
+
 # Configuração de logging
 logging.basicConfig(
     level=logging.INFO,
@@ -47,16 +51,7 @@ class ScanMode(Enum):
     FAST = auto()      # Varredura rápida (canais mais comuns)
     DEEP = auto()      # Varredura profunda (todos os canais)
 
-class WiFiSecurityType(Enum):
-    """Tipos de segurança de rede WiFi."""
-    NONE = "Aberta"
-    WEP = "WEP"
-    WPA = "WPA"
-    WPA2 = "WPA2"
-    WPA3 = "WPA3"
-    WPA_WPA2 = "WPA/WPA2"
-    WPA2_WPA3 = "WPA2/WPA3"
-    UNKNOWN = "Desconhecido"
+# WiFiSecurityType agora é importado de moriarty.modules.wifippler.core.models.network
 
 @dataclass
 class WiFiClient:
@@ -329,10 +324,16 @@ class WiFiScanner:
             
         encryption = encryption.upper()
         
+        # Verifica se a criptografia está no mapeamento
+        for key, security_type in SECURITY_MAP.items():
+            if key in encryption:
+                return security_type
+                
+        # Tenta inferir o tipo de segurança com base em padrões comuns
         if 'WPA3' in encryption and 'WPA2' in encryption:
-            return WiFiSecurityType.WPA2_WPA3
+            return WiFiSecurityType.WPA2
         elif 'WPA2' in encryption and 'WPA' in encryption:
-            return WiFiSecurityType.WPA_WPA2
+            return WiFiSecurityType.WPA2
         elif 'WPA3' in encryption:
             return WiFiSecurityType.WPA3
         elif 'WPA2' in encryption:
@@ -341,8 +342,9 @@ class WiFiScanner:
             return WiFiSecurityType.WPA
         elif 'WEP' in encryption:
             return WiFiSecurityType.WEP
-        else:
-            return WiFiSecurityType.UNKNOWN
+            
+        # Se não conseguir determinar, retorna o tipo padrão
+        return WiFiSecurityType.WPA2
     
     def _channel_to_frequency(self, channel: int) -> int:
         """Converte um número de canal para frequência em MHz.
@@ -536,7 +538,7 @@ class WiFiScanner:
                 existing.frequency = self._channel_to_frequency(network.channel)
                 
             # Atualiza a segurança, se disponível
-            if network.security != WiFiSecurityType.UNKNOWN:
+            if network.security != WiFiSecurityType.NONE:
                 existing.security = network.security
                 existing.encryption = network.encryption
                 existing.cipher = network.cipher
