@@ -22,7 +22,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from ...core.models.network import WiFiNetwork, WiFiClient
-from ...utils import (
+from ...core.utils import (
     is_root, check_dependencies, get_network_interfaces,
     set_monitor_mode, restore_network_interface, command_exists,
     get_interface_mac
