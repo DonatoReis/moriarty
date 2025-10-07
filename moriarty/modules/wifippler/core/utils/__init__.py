@@ -131,23 +131,6 @@ def run_command(cmd: Union[str, List[str]], capture_output: bool = False,
     
     try:
         return subprocess.run(cmd, check=check, **kwargs)
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Command failed with exit code {e.returncode}: {' '.join(cmd)}")
-        if capture_output and e.stderr:
-            logger.error(f"Error output: {e.stderr.strip()}")
-        raise
-
-def get_monitor_interfaces() -> List[str]:
-    """Retorna a lista de interfaces em modo monitor."""
-    monitor_ifaces = []
-    
-    try:
-        for interface in netifaces.interfaces():
-            if interface.endswith('mon'):
-                monitor_ifaces.append(interface)
-            else:
-                try:
-                    with open(f"/sys/class/net/{interface}/type", 'r') as f:
                         if f.read().strip() == '803':  # ARPHRD_IEEE80211_RADIOTAP
                             monitor_ifaces.append(interface)
                 except (IOError, FileNotFoundError):

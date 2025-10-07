@@ -18,6 +18,7 @@ from .attacks import (
 # Import utility functions
 from .utils import (
     is_root,
+    get_wireless_interfaces,
     check_dependencies,
     get_network_interfaces,
     get_monitor_interfaces,
@@ -40,8 +41,7 @@ from .utils import (
     parse_airodump_csv,
     parse_airodump_stations,
     run_command,
-    randomize_mac,
-    get_wireless_interfaces
+    command_exists
 )
 
 __all__ = [
