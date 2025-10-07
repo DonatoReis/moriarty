@@ -76,17 +76,23 @@ class DomainScanner:
         stealth_level: int = 0,
         threads: int = 10,
         timeout: int = 30,
+        verbose: bool = False,
     ):
         self.target = target
         self.modules = modules or self.DEFAULT_MODULES
         self.stealth_level = stealth_level
         self.threads = threads
         self.timeout = timeout
+        self.verbose = verbose
         self.result = ScanResult(target=target)
         self.stealth = None
+        
+        # Configura o nível de log com base no modo verbose
+        log_level = logging.DEBUG if verbose else logging.INFO
+        logging.basicConfig(level=log_level)
+        
         if self.stealth_level > 0:
             from moriarty.modules.stealth_mode import StealthMode
-
             self.stealth = StealthMode(level=self.stealth_level)
 
         self.tech_profile: Optional[Dict[str, Any]] = None

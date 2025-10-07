@@ -24,9 +24,23 @@ app = typer.Typer(
 )
 
 
+def version_callback(value: bool):
+    if value:
+        from .. import __version__
+        console.print(f"Moriarty OSINT Toolkit v{__version__}")
+        raise typer.Exit()
+
 @app.callback()
 def main(
     ctx: typer.Context,
+    version: bool = typer.Option(
+        None, 
+        "--version", 
+        "-v", 
+        callback=version_callback,
+        is_eager=True,
+        help="Show version and exit.",
+    ),
     concurrency: int = typer.Option(50, min=1, help="Maximum concurrent tasks."),
     timeout: float = typer.Option(8.0, min=0.1, help="Per-request timeout in seconds."),
     proxy: str | None = typer.Option(None, help="HTTP/SOCKS proxy URI."),
@@ -46,7 +60,7 @@ def main(
     ),
     output: str | None = typer.Option(None, help="Path to export artifacts."),
     redact: bool = typer.Option(True, "--redact/--no-redact", help="Redact PII in output."),
-    verbose: bool = typer.Option(False, help="Enable verbose logging."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging."),
     quiet: bool = typer.Option(False, help="Suppress non-critical output."),
     professional_mode: bool = typer.Option(False, help="Enable professional mode safeguards."),
     seed: int | None = typer.Option(None, help="Deterministic seed for planners."),
@@ -117,4 +131,86 @@ def main() -> None:  # Console script compatibility
     main_entry()
 
 
-__all__ = ["app", "main"]
+def check_pipx_installed() -> bool:
+    """Verifica se o pipx está instalado."""
+    try:
+        import subprocess
+        subprocess.run(["pipx", "--version"], capture_output=True, check=True)
+        return True
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return False
+
+
+def self_update():
+    """Atualiza o Moriarty para a versão mais recente."""
+    import subprocess
+    import sys
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich import print
+    
+    console = Console()
+    
+    try:
+        # Verifica se está instalado com pipx
+        if check_pipx_installed():
+            console.print("🔄 Atualizando via pipx...", style="bold blue")
+            result = subprocess.run(
+                ["pipx", "install", "--upgrade", "moriarty-project"],
+                capture_output=True,
+                text=True
+            )
+        else:
+            console.print("🔄 Atualizando via pip...", style="bold blue")
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "--upgrade", "moriarty-project"],
+                capture_output=True,
+                text=True
+            )
+        
+        if result.returncode == 0:
+            console.print("✅ [bold green]Atualização concluída com sucesso![/]")
+            if result.stdout:
+                console.print(Panel(
+                    result.stdout.strip(),
+                    title="[bold]Saída do comando[/]",
+                    border_style="green"
+                ))
+            console.print("\nReinicie o terminal para aplicar as alterações.", style="yellow")
+        else:
+            console.print("❌ [bold red]Erro durante a atualização:[/]")
+            if result.stderr:
+                console.print(Panel(
+                    result.stderr.strip(),
+                    title="[bold]Mensagem de erro[/]",
+                    border_style="red"
+                ))
+            console.print("\nTente executar manualmente:")
+            if check_pipx_installed():
+                console.print("  [cyan]pipx install --upgrade moriarty-project[/]")
+            else:
+                console.print(f"  [cyan]{sys.executable} -m pip install --upgrade moriarty-project[/]")
+    except Exception as e:
+        console.print(f"❌ [bold red]Erro inesperado:[/] {str(e)}")
+        console.print("\nTente atualizar manualmente usando:")
+        if check_pipx_installed():
+            console.print("  [cyan]pipx install --upgrade moriarty-project[/]")
+        else:
+            console.print(f"  [cyan]{sys.executable} -m pip install --upgrade moriarty-project[/]")
+
+
+# Adiciona o comando self-update
+@app.command("self-update", help="Atualiza o Moriarty para a versão mais recente.")
+def self_update_command():
+    """Atualiza o Moriarty para a versão mais recente."""
+    self_update()
+
+
+# Adiciona um alias mais curto
+@app.command("update", hidden=True)
+def update_alias():
+    """Alias para 'self-update'."""
+    self_update()
+
+
+__all__ = ["app", "main", "self_update"]
