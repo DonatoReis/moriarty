@@ -131,14 +131,9 @@ def run_command(cmd: Union[str, List[str]], capture_output: bool = False,
     
     try:
         return subprocess.run(cmd, check=check, **kwargs)
-                        if f.read().strip() == '803':  # ARPHRD_IEEE80211_RADIOTAP
-                            monitor_ifaces.append(interface)
-                except (IOError, FileNotFoundError):
-                    continue
     except Exception as e:
-        logger.error(f"Erro ao obter interfaces em modo monitor: {e}")
-    
-    return monitor_ifaces
+        logger.error(f"Erro ao executar comando: {e}")
+        raise
 
 def set_monitor_mode(interface: str, channel: int = None) -> bool:
     """Ativa o modo monitor em uma interface."""
