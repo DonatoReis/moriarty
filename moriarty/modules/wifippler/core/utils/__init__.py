@@ -6,6 +6,7 @@ import sys
 import re
 import subprocess
 import shlex
+import shutil
 import logging
 import socket
 import fcntl
@@ -100,24 +101,41 @@ def check_dependencies() -> List[str]:
         if not command_exists(dep):
             missing.append(dep)
     
-    return missing
 
 def command_exists(cmd: str) -> bool:
     """Verifica se um comando existe no sistema."""
     return shutil.which(cmd) is not None
 
-def get_network_interfaces() -> List[str]:
-    """Retorna a lista de interfaces de rede sem fio disponíveis."""
-    interfaces = []
+# A função get_wireless_interfaces já está definida acima, então não precisamos duplicá-la
+
+def run_command(cmd: Union[str, List[str]], capture_output: bool = False, 
+               check: bool = True, **kwargs) -> subprocess.CompletedProcess:
+    """
+    Executa um comando no shell com tratamento de erros.
+    
+    Args:
+        cmd: Comando a ser executado (string ou lista)
+        capture_output: Se deve capturar a saída padrão e de erro
+        check: Se deve lançar uma exceção em caso de código de saída diferente de zero
+        **kwargs: Argumentos adicionais para subprocess.run()
+        
+    Returns:
+        subprocess.ClosedProcess: Resultado da execução do comando
+    """
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    
+    kwargs.setdefault('stdout', subprocess.PIPE if capture_output else None)
+    kwargs.setdefault('stderr', subprocess.PIPE if capture_output else None)
+    kwargs.setdefault('text', True)
     
     try:
-        for interface in netifaces.interfaces():
-            if interface.startswith(('wlan', 'wlp', 'wlo', 'wlp')):
-                interfaces.append(interface)
-    except Exception as e:
-        logger.error(f"Erro ao obter interfaces de rede: {e}")
-    
-    return interfaces
+        return subprocess.run(cmd, check=check, **kwargs)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Command failed with exit code {e.returncode}: {' '.join(cmd)}")
+        if capture_output and e.stderr:
+            logger.error(f"Error output: {e.stderr.strip()}")
+        raise
 
 def get_monitor_interfaces() -> List[str]:
     """Retorna a lista de interfaces em modo monitor."""
@@ -600,13 +618,3 @@ def randomize_mac(interface: str) -> bool:
     except subprocess.CalledProcessError as e:
         logger.error(f"Falha ao aleatorizar o endereço MAC: {e}")
         return False
-
-def get_wireless_interfaces() -> List[Dict[str, Any]]:
-    """
-    Obtém uma lista de interfaces de rede sem fio.
-    
-    Returns:
-        List[Dict[str, Any]]: Lista de interfaces sem fio com suas propriedades
-    """
-    return [iface for iface in get_network_interfaces() 
-            if iface.get('wireless', False)]

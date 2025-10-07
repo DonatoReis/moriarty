@@ -173,13 +173,54 @@ def get_network_interfaces() -> List[Dict[str, Any]]:
 
 def get_wireless_interfaces() -> List[Dict[str, Any]]:
     """
-    Get a list of wireless network interfaces.
+    Obtém uma lista de interfaces de rede sem fio.
     
     Returns:
-        List[Dict[str, Any]]: List of wireless interfaces with their properties
+        List[Dict[str, Any]]: Lista de interfaces sem fio com suas propriedades.
+        Cada dicionário contém as seguintes chaves:
+        - name: Nome da interface
+        - mac: Endereço MAC da interface
+        - ip: Endereço IP da interface
+        - wireless: True se for uma interface sem fio
+        - up: True se a interface estiver ativa
+        - mtu: Tamanho máximo de unidade de transmissão
+        
+    Raises:
+        RuntimeError: Se ocorrer um erro ao obter as interfaces de rede
     """
-    return [iface for iface in get_network_interfaces() 
-            if iface.get('wireless', False)]
+    try:
+        interfaces = get_network_interfaces()
+        if not interfaces:
+            logger.warning("Nenhuma interface de rede encontrada")
+            return []
+            
+        wireless_interfaces = []
+        for iface in interfaces:
+            try:
+                if iface.get('wireless', False):
+                    # Adiciona informações adicionais à interface
+                    iface_info = {
+                        'name': iface.get('name', ''),
+                        'mac': iface.get('mac', ''),
+                        'ip': iface.get('ip', ''),
+                        'wireless': True,
+                        'up': iface.get('up', False),
+                        'mtu': iface.get('mtu', 0)
+                    }
+                    wireless_interfaces.append(iface_info)
+            except Exception as e:
+                logger.error(f"Erro ao processar interface {iface.get('name', 'desconhecida')}: {e}")
+                continue
+                
+        if not wireless_interfaces:
+            logger.warning("Nenhuma interface sem fio encontrada")
+            
+        return wireless_interfaces
+        
+    except Exception as e:
+        error_msg = f"Erro ao obter interfaces sem fio: {e}"
+        logger.error(error_msg)
+        raise RuntimeError(error_msg) from e
 
 def get_interface_mac(interface: str) -> Optional[str]:
     """
