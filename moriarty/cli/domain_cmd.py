@@ -25,6 +25,7 @@ def scan_full(
     threads: int = typer.Option(10, "--threads", "-t", help="Threads concorrentes"),
     timeout: int = typer.Option(30, "--timeout", help="Timeout em segundos"),
     output: str = typer.Option(None, "--output", "-o", help="Arquivo de saída"),
+    verbose: bool = typer.Option(False, "--verbose", help="Ativar saída detalhada"),
 ):
     """
     🔍 Scan completo de domínio/IP com 14 módulos.
@@ -49,6 +50,7 @@ def scan_full(
         stealth_level=stealth,
         threads=threads,
         timeout=timeout,
+        verbose=verbose,
     )
     
     asyncio.run(scanner.run())
@@ -284,6 +286,7 @@ def port_scan(
     scan_type: str = typer.Option("syn", "--type", "-t", help="Tipo: syn, tcp, udp"),
     stealth: int = typer.Option(0, "--stealth", "-s", help="Stealth level (0-4)"),
     output: str = typer.Option(None, "--output", "-o", help="Arquivo de saída"),
+    verbose: bool = typer.Option(False, "--verbose", help="Ativar saída detalhada"),
 ):
     """
     🔌 Scan avançado de portas.
@@ -496,39 +499,133 @@ def passive_recon(
 
 @app.command("ports")
 def port_scan(
-    domain: str = typer.Argument(..., help="Alvo para o port scan"),
-    profile: str = typer.Option("quick", "--profile", "-p", help=f"Perfil ({', '.join(PROFILES.keys())})"),
-    concurrency: int = typer.Option(200, "--concurrency", help="Conexões simultâneas"),
-    timeout: float = typer.Option(1.5, "--timeout", help="Timeout por porta"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Arquivo de saída JSON"),
+    target: str = typer.Argument(..., help="Domínio ou IP para escanear"),
+    profile: str = typer.Option(
+        "quick", 
+        "--profile", 
+        "-p", 
+        help=f"Perfil de varredura: {', '.join(PROFILES.keys())}"
+    ),
+    stealth: int = typer.Option(
+        0,
+        "--stealth",
+        "-s",
+        min=0,
+        max=5,
+        help="Nível de stealth (0-5, maior = mais lento e discreto)",
+    ),
+    concurrency: int = typer.Option(
+        200, 
+        "--concurrency", 
+        "-c", 
+        help="Número de conexões simultâneas",
+        min=1,
+        max=1000,
+    ),
+    timeout: float = typer.Option(
+        2.0, 
+        "--timeout", 
+        "-t", 
+        help="Timeout por porta em segundos",
+        min=0.5,
+        max=30.0,
+    ),
+    output: Optional[str] = typer.Option(
+        None, 
+        "--output", 
+        "-o", 
+        help="Arquivo de saída (formato: .json, .txt, .md)"
+    ),
+    format: str = typer.Option(
+        "text",
+        "--format",
+        "-f",
+        help="Formato de saída: text, json, markdown",
+    ),
+    resolve_services: bool = typer.Option(
+        True,
+        "--resolve/--no-resolve",
+        help="Tentar identificar serviços nas portas abertas",
+    ),
+    check_vulns: bool = typer.Option(
+        True,
+        "--vulns/--no-vulns",
+        help="Verificar vulnerabilidades conhecidas",
+    ),
 ):
-    """Executa port scan assíncrono com banners."""
+    """
+    🔍 Varredura avançada de portas com detecção de serviços e vulnerabilidades.
+    
+    Exemplos:
+        moriarty domain ports example.com
+        moriarty domain ports 192.168.1.1 --profile full --stealth 3
+        moriarty domain ports target.com -o resultado.json --format json
+    """
     import asyncio
     import json
+    from pathlib import Path
+    from moriarty.modules.port_scanner import format_scan_results
+
+    # Validações
+    if profile not in PROFILES:
+        console.print(f"[red]Erro:[/red] Perfil inválido. Use um destes: {', '.join(PROFILES.keys())}")
+        raise typer.Exit(1)
+
+    if output:
+        output = Path(output)
+        if output.suffix not in (".json", ".txt", ".md"):
+            console.print("[yellow]Aviso:[/yellow] Extensão de arquivo não suportada. Usando .json")
+            output = output.with_suffix(".json")
 
     async def _run():
         scanner = PortScanner(
-            target=domain,
+            target=target,
             profile=profile,
             concurrency=concurrency,
             timeout=timeout,
+            stealth_level=stealth,
+            resolve_services=resolve_services,
+            check_vulns=check_vulns,
         )
         return await scanner.scan()
 
-    results = asyncio.run(_run())
-    if not results:
-        console.print("[yellow]Nenhuma porta aberta detectada[/yellow]")
-    else:
-        table_data = [
-            {"port": r.port, "status": r.status, "banner": r.banner or "-"}
-            for r in results
-        ]
-        console.print_json(data=table_data)
-
-    if output:
-        json_payload = [r.__dict__ for r in results]
-        with open(output, "w", encoding="utf-8") as handle:
-            json.dump(json_payload, handle, indent=2, ensure_ascii=False)
+    # Executa o scanner
+    console.print(f"[bold]🔍 Iniciando varredura em:[/bold] {target}")
+    console.print(f"📊 Perfil: {profile} (portas: {len(PROFILES[profile])})")
+    console.print(f"🕵️  Nível de stealth: {stealth}")
+    
+    try:
+        results = asyncio.run(_run())
+        
+        if not results:
+            console.print("[yellow]⚠️  Nenhuma porta aberta detectada[/yellow]")
+            return
+            
+        # Formata a saída
+        if format.lower() == "json":
+            output_text = json.dumps([r.to_dict() for r in results], indent=2)
+            if not output:
+                console.print_json(data=json.loads(output_text))
+        else:
+            output_text = format_scan_results(results, output_format=format)
+            if not output:
+                console.print(output_text)
+        
+        # Salva em arquivo se especificado
+        if output:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            with open(output, "w", encoding="utf-8") as f:
+                if output.suffix == ".json":
+                    json.dump([r.to_dict() for r in results], f, indent=2, ensure_ascii=False)
+                else:
+                    f.write(output_text)
+            console.print(f"\n[green]✅ Resultados salvos em:[/green] {output.absolute()}")
+    
+    except Exception as e:
+        console.print(f"[red]❌ Erro durante a varredura:[/red] {str(e)}")
+        if "object NoneType can't be used in 'await' expression" in str(e):
+            console.print("[yellow]Dica:[/yellow] Tente aumentar o timeout com --timeout 5.0")
+        raise typer.Exit(1)
         console.print(f"[green]✓ Resultado salvo em[/green] {output}")
 
 

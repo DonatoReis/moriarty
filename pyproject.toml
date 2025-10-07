@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moriarty-project"
-version = "0.1.7"
+version = "0.1.8"
 description = "Client-side OSINT toolkit with forensic-grade evidence handling."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -44,7 +44,10 @@ dependencies = [
   "Pillow",
   "phonenumbers",
   "scapy",
-  "requests"
+  "requests",
+  "dnspython>=2.0.0",
+  "pyOpenSSL>=23.0.0",
+  "idna>=3.0"
 ]
 
 [project.optional-dependencies]
