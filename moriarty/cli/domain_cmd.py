@@ -4,7 +4,7 @@ from typing import Optional
 
 import typer
 
-from moriarty.modules.port_scanner import PROFILES
+from moriarty.modules.port_scanner import PortScanner, PROFILES
 from moriarty.modules.passive_recon import PassiveRecon
 from rich.console import Console
 
