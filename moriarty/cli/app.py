@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.theme import Theme
 
 from ..logging.config import LogStyle, configure_logging
-from . import dns, email, rdap, tls, user, domain_cmd, intelligence
+from . import dns, email, rdap, tls, user, domain_cmd, intelligence, wifippler
 from .state import CLIState, GlobalOptions
 
 console = Console(theme=Theme({
@@ -111,19 +111,20 @@ def main(
         )
     )
 
-
 app.add_typer(email.app, name="email", help="Email reconnaissance primitives.")
 app.add_typer(dns.app, name="dns", help="Consultas DNS.")
 app.add_typer(rdap.app, name="rdap", help="Consultas RDAP.")
 app.add_typer(tls.app, name="tls", help="Inspeções TLS.")
-app.add_typer(user.app, name="user", help="Enumeração de usernames.")
-app.add_typer(domain_cmd.app, name="domain", help="🌐 Domain/IP reconnaissance and scanning.")
+app.add_typer(intelligence.app, name="intelligence", help="Inteligência de ameaças.")
+app.add_typer(domain_cmd.app, name="domain", help="Análise de domínios.")
+app.add_typer(wifippler.app, name="wifippler", help="Análise de redes WiFi.")
+app.add_typer(user.app, name="user", help="User/IP reconnaissance and scanning.")
 
 # Registra os comandos de inteligência
 intelligence.register_app(app)
 
 
-def main_entry() -> None:
+if __name__ == "__main__":
     app()
 
 

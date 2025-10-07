@@ -4,80 +4,93 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moriarty-project"
-version = "0.1.10"
+version = "0.1.11"
 description = "Client-side OSINT toolkit with forensic-grade evidence handling."
 readme = "README.md"
-requires-python = ">=3.13"
-license = {text = "MIT"}
-authors = [
-  {name = "Moriarty Contributors"}
-]
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Moriarty Contributors" }]
 keywords = ["osint", "cli", "forensics", "security"]
 classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "License :: OSI Approved :: MIT License",
   "Intended Audience :: Information Technology",
   "Topic :: Security",
   "Topic :: Utilities"
 ]
+
+# Mantemos limites inferiores razoáveis (compatíveis com 2025) para permitir instalar "o mais novo"
+# sem travar usuários, e ao mesmo tempo evitar que versões muito antigas entrem por engano.
 dependencies = [
-  "typer[all]",
-  "httpx[http2]",
-  "uvloop; platform_system != 'Windows'",
-  "aiodns",
-  "aiosmtplib",
-  "selectolax",
-  "lxml",
-  "aiohttp",
-  "rapidfuzz",
-  "orjson",
-  "pydantic>=2",
-  "rich",
-  "aiolimiter",
-  "email-validator",
-  "networkx",
-  "PyYAML>=6",
-  "jsonpath-ng",
-  "structlog",
-  "Pillow",
-  "phonenumbers",
-  "scapy",
-  "requests",
-  "dnspython>=2.0.0",
-  "pyOpenSSL>=23.0.0",
-  "idna>=3.0"
+  # CLI / TUI
+  "typer[all]>=0.12.0",
+  "rich>=13.7.0",
+
+  # HTTP / Networking
+  "httpx[http2]>=0.27.0",
+  "aiohttp>=3.9.0",
+  "aiodns>=3.0.0",
+  "aiolimiter>=1.1.0",
+  "dnspython>=2.5.0",
+  "requests>=2.32.0",
+  "idna>=3.6",
+
+  # Performance/event loop (não-Windows)
+  "uvloop>=0.19.0; platform_system != 'Windows'",
+
+  # Parsing / Data
+  "selectolax>=0.3.20",
+  "lxml>=5.3.0",
+  "rapidfuzz>=3.0.0",
+  "orjson>=3.9.0",
+  "PyYAML>=6.0",
+  "jsonpath-ng>=1.6.0",
+  "structlog>=24.1.0",
+  "pydantic>=2.7.0",
+
+  # Sistema / Utils
+  "psutil>=5.9.0",
+  "colorama>=0.4.6",
+  "tqdm>=4.67.0",
+  "pycryptodomex>=3.23.0",
+  "networkx>=3.2.0",
+  "pillow>=10.0.0",
+  "phonenumbers>=8.13.0",
+  "pyOpenSSL>=25.0.0",
+  "python-nmap>=0.7.1",
+  "scapy>=2.5.0",
+  "netifaces>=0.11.0"
 ]
 
 [project.optional-dependencies]
-pdf = [
-  "weasyprint>=60.0"
+# >>> Pacotes de captura e Wi-Fi (por SO) — instale quando precisar:
+capture = [
+  "pypcap>=1.2.3; platform_system == 'Linux' or platform_system == 'Windows'",
+  "python-libpcap>=0.5; platform_system == 'Darwin'",
+  "python-wifi>=0.6.1; platform_system == 'Linux' or platform_system == 'Windows'",
+  "pywifi>=1.1.12; platform_system == 'Linux' or platform_system == 'Windows'",
 ]
-headless = [
-  "playwright>=1.40.0"
-]
-stix = [
-  "stix2>=3.0.0"
-]
-http3 = [
-  "aioquic>=0.9.0"
-]
-sign = [
-  "sigstore>=2.0.0"
-]
-image = [
-  "ImageHash>=4.3.0"
-]
+
+# Outras features
+pdf = ["weasyprint>=60.0"]
+headless = ["playwright>=1.40.0"]
+stix = ["stix2>=3.0.0"]
+http3 = ["aioquic>=0.9.0"]
+sign = ["sigstore>=2.0.0"]
+image = ["ImageHash>=4.3.0"]
 dev = [
-  "pytest",
-  "pytest-xdist",
-  "hypothesis",
-  "mypy",
-  "ruff",
-  "pip-audit",
-  "cyclonedx-bom",
+  "pytest>=8.0.0",
+  "pytest-xdist>=3.5.0",
+  "hypothesis>=6.98.0",
+  "mypy>=1.10.0",
+  "ruff>=0.5.0",
+  "pip-audit>=2.7.0",
+  "cyclonedx-bom>=4.4.0",
   "deptry>=0.23.0"
 ]
 
@@ -103,6 +116,7 @@ addopts = "-n auto --strict-markers"
 testpaths = ["moriarty/tests"]
 
 [tool.mypy]
-python_version = "3.13"
+# Use a baseline que garante compatibilidade com o menor Python suportado.
+python_version = "3.11"
 strict = true
 packages = ["moriarty"]

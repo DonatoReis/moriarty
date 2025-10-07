@@ -11,8 +11,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
 
+# Importa a classe ServiceInfo para uso no código
+
 import aiohttp
 import dns.resolver
+import dns.asyncresolver
 import OpenSSL.crypto
 import structlog
 from rich.console import Console
@@ -153,6 +156,7 @@ class PortScanResult:
     port: int
     protocol: str = "tcp"
     status: str = "open"
+    target: Optional[str] = None
     service: Optional[ServiceInfo] = None
     banner: Optional[str] = None
     timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
@@ -290,7 +294,7 @@ class PortScanner:
             )
             
             # Se chegou aqui, a porta está aberta
-            result = PortScanResult(port=port, status="open")
+            result = PortScanResult(port=port, status="open", target=self.target)
             
             # Tenta obter o banner do serviço
             try:
