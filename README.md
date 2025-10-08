@@ -73,11 +73,7 @@
 pipx install moriarty-project
 
 # OU para instalar uma versão específica
-<<<<<<< HEAD
-# pipx install moriarty-project==0.1.11
-=======
 # pipx install moriarty-project==0.1.23
->>>>>>> fix/rollback-to-v0.1.10
 
 # Verificar a instalação
 moriarty --help
