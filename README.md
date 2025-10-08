@@ -19,7 +19,7 @@
 <!-- Badges -->
 <p align="center">
   <a href="https://pypi.org/project/moriarty-project/">
-    <img src="https://img.shields.io/badge/version-0.1.22-blue" alt="Version 0.1.22">
+    <img src="https://img.shields.io/badge/version-0.1.23-blue" alt="Version 0.1.23">
   </a>
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/pypi/pyversions/moriarty-project?color=blue" alt="Python Versions">
@@ -73,7 +73,11 @@
 pipx install moriarty-project
 
 # OU para instalar uma versão específica
+<<<<<<< HEAD
 # pipx install moriarty-project==0.1.11
+=======
+# pipx install moriarty-project==0.1.23
+>>>>>>> fix/rollback-to-v0.1.10
 
 # Verificar a instalação
 moriarty --help
