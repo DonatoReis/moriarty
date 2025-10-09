@@ -1,8 +1,12 @@
 """Comandos de scanning de domínios/IPs."""
+
+import asyncio
 import json
-from typing import Optional
+from typing import Optional, Dict, List
 
 import typer
+
+from moriarty.modules.web_crawler import WebCrawler
 
 from moriarty.modules.port_scanner import PortScanner, PROFILES
 from moriarty.modules.passive_recon import PassiveRecon

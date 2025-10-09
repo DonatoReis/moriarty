@@ -8,7 +8,8 @@ from rich.console import Console
 from rich.theme import Theme
 
 from ..logging.config import LogStyle, configure_logging
-from . import dns, email, rdap, tls, user, domain_cmd, intelligence, wifippler
+from . import dns, email, rdap, tls, user, domain_cmd, intelligence
+# Temporariamente removido para testes: wifippler
 from .state import CLIState, GlobalOptions
 
 console = Console(theme=Theme({
@@ -117,7 +118,7 @@ app.add_typer(rdap.app, name="rdap", help="Consultas RDAP.")
 app.add_typer(tls.app, name="tls", help="Inspeções TLS.")
 app.add_typer(intelligence.app, name="intelligence", help="Inteligência de ameaças.")
 app.add_typer(domain_cmd.app, name="domain", help="Análise de domínios.")
-app.add_typer(wifippler.app, name="wifippler", help="Análise de redes WiFi.")
+# Temporariamente removido: wifippler.app
 app.add_typer(user.app, name="user", help="User/IP reconnaissance and scanning.")
 
 # Registra os comandos de inteligência
@@ -129,7 +130,7 @@ if __name__ == "__main__":
 
 
 def main() -> None:  # Console script compatibility
-    main_entry()
+    app()
 
 
 def check_pipx_installed() -> bool:

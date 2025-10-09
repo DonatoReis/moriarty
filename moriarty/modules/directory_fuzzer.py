@@ -160,10 +160,18 @@ class DirectoryFuzzer:
             verify=False
         ) as client:
             
-            with Progress() as progress:
+            with Progress(
+                "[progress.description]{task.description}",
+                "•",
+                "[progress.percentage]{task.percentage:>3.0f}%",
+                "[dim]{task.fields[status]}",
+                refresh_per_second=10,
+                console=console
+            ) as progress:
                 task_id = progress.add_task(
                     f"[cyan]Fuzzing {base_url.split('/')[-1] or 'root'}...",
-                    total=len(urls_to_test)
+                    total=len(urls_to_test),
+                    status=""
                 )
                 
                 tasks = [
@@ -197,7 +205,8 @@ class DirectoryFuzzer:
                 headers = self._get_headers()
                 response = await client.get(url, headers=headers)
                 
-                progress.update(task_id, advance=1)
+                # Atualiza o progresso
+                progress.update(task_id, advance=1, refresh=True)
                 
                 # Filtra por status code
                 if response.status_code not in self.status_filter:
@@ -231,12 +240,23 @@ class DirectoryFuzzer:
                 elif url.endswith('/'):
                     self.found_dirs.add(url.rstrip('/'))
                 
-                # Log descoberta
+                # Adiciona resultado à lista para exibição posterior
                 color = self._get_status_color(response.status_code)
-                console.print(
+                result_str = (
                     f"  [{color}]{response.status_code}[/{color}] "
                     f"[cyan]{url.replace(self.base_url, '')}[/cyan] "
                     f"[dim]({content_size} bytes)[/dim]"
+                )
+                
+                # Atualiza a descrição da tarefa com o último resultado
+                progress.update(task_id, description=f"[cyan]Fuzzing {base_url.split('/')[-1] or 'root'}... {result_str}")
+                
+                # Adiciona ao log estruturado
+                logger.info(
+                    "fuzzer.found",
+                    url=url,
+                    status=response.status_code,
+                    size=content_size
                 )
                 
                 logger.info(
