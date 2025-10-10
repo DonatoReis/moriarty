@@ -1,14 +1,12 @@
 """Comandos de scanning de domínios/IPs."""
 
-import asyncio
-import json
-from typing import Optional, Dict, List
+from typing import Optional
 
 import typer
 
 from moriarty.modules.web_crawler import WebCrawler
 
-from moriarty.modules.port_scanner import PortScanner, PROFILES
+from moriarty.modules.port_scanner_nmap import PortScanner, PROFILES
 from moriarty.modules.passive_recon import PassiveRecon
 from rich.console import Console
 
@@ -28,6 +26,7 @@ def scan_full(
     stealth: int = typer.Option(0, "--stealth", "-s", help="Stealth level (0-4)"),
     threads: int = typer.Option(10, "--threads", "-t", help="Threads concorrentes"),
     timeout: int = typer.Option(30, "--timeout", help="Timeout em segundos"),
+    ports: str = typer.Option("quick", "--ports", "-p", help="Perfil de portas: quick, web, db, full, all"),
     output: str = typer.Option(None, "--output", "-o", help="Arquivo de saída"),
     verbose: bool = typer.Option(False, "--verbose", help="Ativar saída detalhada"),
 ):
@@ -48,9 +47,13 @@ def scan_full(
     logging.getLogger("httpcore").setLevel(logging.ERROR)
     logging.getLogger("moriarty").setLevel(logging.ERROR)
     
+    # Converte a string de módulos para lista
+    modules_list = modules.split(",") if modules != "all" else None
+    
     scanner = DomainScanner(
         target=target,
-        modules=modules.split(",") if modules != "all" else None,
+        modules=modules_list,
+        ports_profile=ports,
         stealth_level=stealth,
         threads=threads,
         timeout=timeout,

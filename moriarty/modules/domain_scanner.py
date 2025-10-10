@@ -76,6 +76,7 @@ class DomainScanner:
         stealth_level: int = 0,
         threads: int = 10,
         timeout: int = 30,
+        ports_profile: str = "quick",
         verbose: bool = False,
     ):
         self.target = target
@@ -83,6 +84,7 @@ class DomainScanner:
         self.stealth_level = stealth_level
         self.threads = threads
         self.timeout = timeout
+        self.ports_profile = ports_profile.lower()
         self.verbose = verbose
         self.result = ScanResult(target=target)
         self.stealth = None
@@ -102,12 +104,20 @@ class DomainScanner:
     async def run(self):
         """Executa scan completo."""
         self._prepare_modules()
+        # Resolve o IP do domínio
+        try:
+            import socket
+            ip = socket.gethostbyname(self.target)
+            target_display = f"{self.target} [{ip}]"
+        except Exception:
+            target_display = self.target
+            
         # Banner profissional
         banner = Panel(
-            f"[bold white]Target:[/bold white] [cyan]{self.target}[/cyan]\n"
+            f"[bold white]Target:[/bold white] [red]{target_display}[/red]\n"
             f"[dim]Modules: {', '.join(self.modules)} | Stealth: {self.stealth_level}[/dim]",
-            title="[bold cyan]🌐 Domain Scanner[/bold cyan]",
-            border_style="cyan",
+            title="[bold red]🌐 Domain Scanner[/bold red]",
+            border_style="red",
             padding=(1, 2),
         )
         console.print(banner)
@@ -148,7 +158,7 @@ class DomainScanner:
     
     async def _run_dns(self):
         """Módulo DNS."""
-        console.print("\n[bold cyan]▶ DNS Enumeration[/bold cyan]")
+        console.print("\n[bold red]▶ DNS Enumeration[/bold red]")
         
         try:
             from moriarty.net.dns_client import DNSClient
@@ -179,7 +189,7 @@ class DomainScanner:
     
     async def _run_subdiscover(self):
         """Módulo Subdomain Discovery."""
-        console.print("\n[bold cyan]▶ Subdomain Discovery[/bold cyan]")
+        console.print("\n[bold red]▶ Subdomain Discovery[/bold red]")
         
         try:
             from moriarty.modules.subdomain_discovery import SubdomainDiscovery
@@ -215,7 +225,7 @@ class DomainScanner:
     
     async def _run_wayback(self):
         """Módulo Wayback Machine."""
-        console.print("\n[bold cyan]▶ Wayback Machine[/bold cyan]")
+        console.print("\n[bold red]▶ Wayback Machine[/bold red]")
         
         try:
             from moriarty.modules.wayback_discovery import WaybackDiscovery
@@ -244,37 +254,87 @@ class DomainScanner:
     
     async def _run_ports(self):
         """Módulo Port Scan."""
-        console.print("\n[bold cyan]▶ Port Scanning[/bold cyan]")
+        console.print("\n[bold red]▶ Port Scanning[/bold red]")
 
         try:
-            from moriarty.modules.port_scanner import PortScanner
+            from moriarty.modules.port_scanner_nmap import PortScanner
 
-            profile = "extended" if self.timeout > 45 else "quick"
+            # Usa o perfil de portas fornecido ou define baseado no timeout se não especificado
+            profile = self.ports_profile if hasattr(self, 'ports_profile') else ("extended" if self.timeout > 45 else "quick")
+            
+            # Log do perfil que será usado
+            console.print(f"  🔧 Usando perfil de portas: [bold]{profile}[/]")
+            
+            # Cria o scanner com as configurações apropriadas
             scanner = PortScanner(
                 target=self.target,
-                profile=profile,
-                concurrency=max(40, self.threads * 30),
-                timeout=max(0.5, min(2.0, self.timeout / 12)),
+                ports=profile,
                 stealth_level=self.stealth_level,
+                resolve_services=True,
+                check_vulns=False
             )
+            
             results = await scanner.scan()
+            
+            if not results:
+                console.print("  ℹ️  Nenhuma porta aberta encontrada.")
+                self.result.port_details = []
+                self.result.open_ports = []
+                return
+                
+            # Processa os resultados
             self.result.port_details = [asdict(entry) for entry in results]
             self.result.open_ports = [entry.port for entry in results]
-            console.print(f"  [green]✓[/green] Found {len(results)} open ports")
-
-            if results:
-                preview = ", ".join(
-                    f"{entry.port} ({entry.banner[:18]}...)" if entry.banner else str(entry.port)
-                    for entry in results[:5]
-                )
-                console.print(f"    [dim]→[/dim] {preview}")
+            
+            # Exibe os resultados em uma tabela
+            self._display_port_results(results)
 
         except Exception as e:
-            console.print(f"  [red]✗[/red] Port scan failed")
+            import traceback
+            console.print(f"  [red]✗[/red] Port scan failed: {str(e)}")
+            console.print(f"[yellow]Detalhes:[/yellow] {traceback.format_exc()}")
+    
+    def _display_port_results(self, results):
+        """Exibe os resultados da varredura de portas em formato de tabela."""
+        from rich.table import Table, box
+        
+        # Filtra apenas portas abertas
+        open_ports = [r for r in results if getattr(r, 'status', '').lower() == 'open']
+        
+        if not open_ports:
+            console.print("ℹ️  Nenhuma porta aberta encontrada.")
+            return
+            
+        # Cria tabela de resultados
+        table = Table(title="🚪 Portas abertas:", box=box.ROUNDED)
+        table.add_column("Porta", style="cyan")
+        table.add_column("Status", style="green")
+        table.add_column("Serviço", style="yellow")
+        table.add_column("Detalhes", style="white")
+        
+        for entry in open_ports:
+            service = getattr(entry, 'service', None)
+            service_name = getattr(service, 'name', 'desconhecido') if service else 'desconhecido'
+            version = getattr(service, 'version', '')
+            details = version if version else ""
+            
+            # Adiciona informações de vulnerabilidades se disponíveis
+            if service and hasattr(service, 'vulns') and service.vulns:
+                vulns = ", ".join(service.vulns[:2])
+                if len(service.vulns) > 2:
+                    vulns += f" (+{len(service.vulns)-2} mais)"
+                details += f"\n🔴 {vulns}"
+            
+            table.add_row(
+                str(entry.port),
+                "🟢 ABERTA",
+                service_name,
+                details.strip() or "-"
+            )
     
     async def _run_ssl(self):
         """Módulo SSL/TLS."""
-        console.print("\n[bold cyan]▶ SSL/TLS Analysis[/bold cyan]")
+        console.print("\n[bold red]▶ SSL/TLS Analysis[/bold red]")
         
         try:
             from moriarty.modules.tls_validator import TLSCertificateValidator
@@ -287,7 +347,7 @@ class DomainScanner:
     
     async def _run_template_scan(self):
         """Módulo Template Scanner."""
-        console.print("\n[bold cyan]▶ Template Scanner[/bold cyan]")
+        console.print("\n[bold red]▶ Template Scanner[/bold red]")
         
         try:
             from moriarty.modules.template_scanner import TemplateScanner
@@ -338,49 +398,109 @@ class DomainScanner:
 
     async def _run_crawl(self):
         """Executa crawler leve para inventário de rotas."""
-        console.print("\n[bold cyan]▶ Web Crawler[/bold cyan]")
+        console.print("\n[bold red]▶ Web Crawler[/bold red]")
         try:
+            console.print("  🔍 Iniciando configuração do Web Crawler...")
             from moriarty.modules.web_crawler import WebCrawler
 
             base_url = self._default_base_url()
-            crawler = WebCrawler(
-                base_url=base_url,
-                max_pages=max(50, self.threads * 10),
-                max_depth=2,
-                concurrency=max(5, self.threads),
-                follow_subdomains=False,
-                stealth=self.stealth,
-            )
+            console.print(f"  🌐 URL base: {base_url}")
+            
+            # Configurações do crawler
+            max_pages = max(50, self.threads * 10)
+            max_depth = 2
+            concurrency = max(5, self.threads)
+            
+            console.print(f"  ⚙️  Configurações: max_pages={max_pages}, max_depth={max_depth}, concurrency={concurrency}")
+            
             try:
-                pages = await crawler.crawl()
-            finally:
-                await crawler.close()
+                console.print("  🚀 Iniciando crawler...")
+                try:
+                    # Log de debug: Verificando se o WebCrawler pode ser instanciado
+                    console.print("  🔧 Instanciando WebCrawler...")
+                    crawler = WebCrawler(
+                        base_url=base_url,
+                        max_pages=max_pages,
+                        max_depth=max_depth,
+                        concurrency=concurrency,
+                        follow_subdomains=False,
+                        stealth=self.stealth,
+                    )
+                    console.print("  ✅ WebCrawler instanciado com sucesso!")
+                except Exception as e:
+                    console.print(f"  ❌ [red]Erro ao instanciar WebCrawler: {str(e)}[/red]")
+                    logger.error("webcrawler.init_error", error=str(e), exc_info=True)
+                    raise
+                
+                try:
+                    console.print("  🔄 Executando varredura...")
+                    pages = await crawler.crawl()
+                    console.print(f"  ✅ Varredura concluída! {len(pages)} páginas encontradas.")
+                    
+                    # Log detalhado das páginas encontradas
+                    for i, (url, page) in enumerate(pages.items(), 1):
+                        console.print(f"  {i}. [blue]{url}[/blue] (Status: {page.status})")
+                        if page.error:
+                            console.print(f"    [red]Erro: {page.error}[/red]")
+                except Exception as e:
+                    console.print(f"  ❌ [red]Erro durante o crawler: {str(e)}[/red]")
+                    logger.error("webcrawler.crawl_error", error=str(e), exc_info=True)
+                    raise
+                
+                try:
+                    self.result.crawl_map = {
+                        url: {
+                            "status": page.status,
+                            "title": page.title,
+                            "forms": page.forms,
+                            "links": page.links,
+                        }
+                        for url, page in pages.items()
+                    }
+                    console.print("  📊 Dados do crawl processados com sucesso!")
+                except Exception as e:
+                    console.print(f"  ❌ [red]Erro ao processar resultados do crawl: {str(e)}[/red]")
+                    logger.error("webcrawler.process_error", error=str(e), exc_info=True)
+                    raise
 
-            self.result.crawl_map = {
-                url: {
-                    "status": page.status,
-                    "title": page.title,
-                    "forms": page.forms,
-                    "links": page.links,
-                }
-                for url, page in pages.items()
-            }
+                try:
+                    extracted = self._extract_targets_from_crawl(pages)
+                    console.print(f"  🔗 {len(extracted)} alvos extraídos para fuzzing")
+                    
+                    for definition in extracted:
+                        self._register_web_target(
+                            definition["url"], 
+                            definition["method"], 
+                            definition["params"]
+                        )
+                    
+                    console.print(f"  [green]✓[/green] Crawled {len(pages)} pages")
+                    if extracted:
+                        console.print(f"    [dim]→[/dim] {len(extracted)} endpoints para fuzz")
+                except Exception as e:
+                    console.print(f"❌ [red]Erro ao extrair alvos do crawl: {str(e)}[/red]")
+                    logger.error("webcrawler.extract_error", error=str(e), exc_info=True)
+                    raise
 
-            extracted = self._extract_targets_from_crawl(pages)
-            for definition in extracted:
-                self._register_web_target(definition["url"], definition["method"], definition["params"])
-
-            console.print(f"  [green]✓[/green] Crawled {len(pages)} pages")
-            if extracted:
-                console.print(f"    [dim]→[/dim] {len(extracted)} endpoints para fuzz")
+            except Exception as e:
+                console.print(f"  [red]✗[/red] Crawl falhou: {str(e)}")
+                logger.error("domain.crawl.failed", error=str(e), exc_info=True)
+                # Tenta fechar o crawler mesmo em caso de erro
+                if 'crawler' in locals():
+                    try:
+                        await crawler.close()
+                    except:
+                        pass
+                raise
 
         except Exception as exc:
-            console.print("  [red]✗[/red] Crawl failed")
-            logger.debug("domain.crawl.error", error=str(exc))
+            console.print(f"  [red]✗[/red] Erro fatal no Web Crawler: {str(exc)}")
+            logger.error("domain.crawl.fatal_error", error=str(exc), exc_info=True)
+            raise
 
     async def _run_fuzzer(self):
         """Executa directory fuzzing para expandir superfícies."""
-        console.print("\n[bold cyan]▶ Directory Fuzzing[/bold cyan]")
+        console.print("\n[bold red]▶ Directory Fuzzing[/bold red]")
         try:
             from moriarty.modules.directory_fuzzer import DirectoryFuzzer
 
@@ -406,7 +526,7 @@ class DomainScanner:
 
     async def _run_vuln_scan(self):
         """Executa detecção de vulnerabilidades XSS/SQLi."""
-        console.print("\n[bold cyan]▶ Web Vulnerability Scan[/bold cyan]")
+        console.print("\n[bold red]▶ Web Vulnerability Scan[/bold red]")
 
         if not self.web_targets:
             console.print("  [yellow]⚠️ Nenhum endpoint coletado para testar[/yellow]")
@@ -430,7 +550,7 @@ class DomainScanner:
 
     async def _run_waf_detect(self):
         """Módulo WAF Detection."""
-        console.print("\n[bold cyan]▶ WAF Detection[/bold cyan]")
+        console.print("\n[bold red]▶ WAF Detection[/bold red]")
         
         try:
             from moriarty.modules.waf_detector import WAFDetector
@@ -461,7 +581,7 @@ class DomainScanner:
     def _show_summary(self):
         """Mostra resumo final."""
         # Tree de resultados
-        tree = Tree(f"\n[bold cyan]📊 Scan Summary[/bold cyan]")
+        tree = Tree(f"\n[bold red]📊 Scan Summary[/bold red]")
         
         if self.result.dns_info:
             dns_node = tree.add("[bold]DNS Records[/bold]")
@@ -610,7 +730,15 @@ class DomainScanner:
         self.result.web_targets = self.web_targets
 
     def _default_base_url(self) -> str:
-        return f"https://{self.target}"
+        """Retorna a URL base para o crawler, garantindo que tenha o esquema correto."""
+        target = self.target
+        
+        # Se o alvo já tiver esquema, retorna como está
+        if target.startswith(('http://', 'https://')):
+            return target
+            
+        # Se não tiver esquema, adiciona https://
+        return f"https://{target}"
 
     def export(self, output: str):
         """Exporta resultados."""

@@ -156,14 +156,14 @@ def self_update():
     try:
         # Verifica se está instalado com pipx
         if check_pipx_installed():
-            console.print("🔄 Atualizando via pipx...", style="bold blue")
+            console.print("🔄 Atualizando via pipx...", style="bold red")
             result = subprocess.run(
                 ["pipx", "install", "--upgrade", "moriarty-project"],
                 capture_output=True,
                 text=True
             )
         else:
-            console.print("🔄 Atualizando via pip...", style="bold blue")
+            console.print("🔄 Atualizando via pip...", style="bold red")
             result = subprocess.run(
                 [sys.executable, "-m", "pip", "install", "--upgrade", "moriarty-project"],
                 capture_output=True,
