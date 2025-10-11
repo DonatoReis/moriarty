@@ -1,20 +1,12 @@
 <div align="left">
 
-<a href="https://pepy.tech/project/moriarty-project">
-  <img src="https://img.shields.io/pepy/dt/moriarty-project?style=for-the-badge&labelColor=2D2D2D&color=00D26A&logo=python&logoColor=white&label=DOWNLOADS" alt="Downloads"/>
-</a>
-
-<a href="https://pypi.org/project/moriarty-project/">
-  <img src="https://img.shields.io/pypi/v/moriarty-project?style=for-the-badge&label=LATEST%20RELEASE&color=0094FF&labelColor=2D2D2D&logo=pypi&logoColor=white" alt="Latest Release"/>
-</a>
-
-<a href="https://github.com/DonatoReis/moriarty/stargazers">
-  <img src="https://img.shields.io/github/stars/DonatoReis/moriarty?style=for-the-badge&label=STARS&color=FFD700&labelColor=2D2D2D&logo=github&logoColor=white" alt="Stars"/>
-</a>
+<a href="https://pepy.tech/project/moriarty-project" style="text-decoration: none;"><img src="https://img.shields.io/pepy/dt/moriarty-project?style=for-the-badge&labelColor=2D2D2D&color=00D26A&logo=python&logoColor=white&label=DOWNLOADS" alt="Downloads"/></a>
+<a href="https://pypi.org/project/moriarty-project/" style="text-decoration: none;"><img src="https://img.shields.io/pypi/v/moriarty-project?style=for-the-badge&label=LATEST%20RELEASE&color=0094FF&labelColor=2D2D2D&logo=pypi&logoColor=white" alt="Latest Release"/></a>
+<a href="https://github.com/DonatoReis/moriarty/stargazers" style="text-decoration: none;"><img src="https://img.shields.io/github/stars/DonatoReis/moriarty?style=for-the-badge&label=STARS&color=FFD700&labelColor=2D2D2D&logo=github&logoColor=white" alt="Stars"/></a>
 
 # Moriarty
 
-### Ferramenta Avançada de OSINT e Segurança
+### Ferramenta Avançada de OSINT e Investigação Digital
 
 *Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração*
 
