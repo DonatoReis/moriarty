@@ -1,326 +1,357 @@
-# Moriarty - Ferramenta Avançada de OSINT e Segurança
+<div align="left">
 
-<!-- Banner -->
-<p align="center">
-  <a href="https://pypi.org/project/moriarty-project/">
-    <img
-      src="./assets/img/moriarty-banner.png"
-      alt="Moriarty OSINT - Ferramenta avançada de reconhecimento e análise de segurança"
-      width="60%"
-      style="border: 1px solid #2d2d2d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-  </a>
-</p>
+<a href="https://pepy.tech/project/moriarty-project">
+  <img src="https://img.shields.io/badge/DOWNLOADS-4.2K-00D26A?style=for-the-badge&labelColor=2D2D2D&logo=python&logoColor=white" alt="Downloads"/>
+</a>
 
-<!-- Subtítulo -->
-<p align="center">
-  Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração.
-</p>
+<a href="https://pypi.org/project/moriarty-project/">
+  <img src="https://img.shields.io/pypi/v/moriarty-project?style=for-the-badge&label=LATEST%20RELEASE&color=0094FF&labelColor=2D2D2D&logo=pypi&logoColor=white" alt="Latest Release"/>
+</a>
 
-<!-- Badges -->
-<p align="center">
-  <a href="https://pypi.org/project/moriarty-project/">
-    <img src="https://img.shields.io/badge/version-0.1.27-blue" alt="Version 0.1.27">
-  </a>
-  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/pypi/pyversions/moriarty-project?color=blue" alt="Python Versions">
-  </a>
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
-  </a>
-  <a href="https://github.com/DonatoReis/moriarty/stargazers">
-    <img src="https://img.shields.io/github/stars/DonatoReis/moriarty?style=social" alt="GitHub stars">
-  </a>
-</p>
+<a href="https://github.com/DonatoReis/moriarty/stargazers">
+  <img src="https://img.shields.io/github/stars/DonatoReis/moriarty?style=for-the-badge&label=STARS&color=FFD700&labelColor=2D2D2D&logo=github&logoColor=white" alt="Stars"/>
+</a>
 
-<p align="center">
-  <a href="#instalação">Instalação</a>
-  &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-  <a href="#uso">Uso</a>
-  &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-  <a href="#comandos">Comandos</a>
-  &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-  <a href="#contribuindo">Contribuindo</a>
-</p>
+# Moriarty
+
+### Ferramenta Avançada de OSINT e Segurança
+
+*Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração*
+
+<img src="./assets/img/moriarty-banner.png" alt="Moriarty Banner" width="60%"/>
+
+</div>
+
+</td>
+<td width="50%">
+
+## 📑 Índice
+
+- [🌟 Recursos Principais](#-recursos-principais)
+- [🚀 Instalação](#-instalação)
+- [💻 Uso Básico](#-uso-básico)
+- [🔍 Comandos](#-comandos)
+- [🛡️ Segurança](#️-recursos-de-segurança)
+- [🤝 Contribuindo](#-contribuindo)
+- [📄 Licença](#-licença)
+
+</td>
+<td width="50%">
 
 ## 🌟 Recursos Principais
 
-- **Reconhecimento Passivo Avançado**
-  - Coleta de informações de múltiplas fontes OSINT
-  - Descoberta de subdomínios
-  - Análise de certificados SSL/TLS
-  - Coleta de metadados WHOIS/RDAP
+<table>
+<tr>
 
-- **Varredura de Segurança**
-  - Varredura de portas com detecção de serviços
-  - Detecção de tecnologias web
-  - Identificação de vulnerabilidades comuns
-  - Teste de WAF/IPS/IDS
+</td>
+<td width="50%">
 
-- **Análise de Ameaças**
-  - Verificação de credenciais vazadas
-  - Análise de reputação de domínios
-  - Detecção de ameaças conhecidas
+### 🔍 Reconhecimento Passivo
+- Coleta de informações OSINT
+- Descoberta de subdomínios
+- Análise de certificados SSL/TLS
+- Metadados WHOIS/RDAP
+
+</td>
+<td width="50%">
+
+### 🛡️ Varredura de Segurança
+- Detecção de serviços e portas
+- Identificação de tecnologias web
+- Scanner de vulnerabilidades
+- Detecção de WAF/IPS/IDS
+
+</td>
+</tr>
+<tr>
+
+</td>
+<td width="50%">
+
+### 📧 Análise de E-mail
+- Validação DNS/SMTP
+- Investigação em múltiplas fontes
+- Verificação de vazamentos
+- Análise de reputação
+
+</td>
+<td width="50%">
+
+### 🎯 Inteligência de Ameaças
+- Análise de IOCs
+- Verificação de credenciais
+- Reputação de domínios
+- Detecção de ameaças conhecidas
+
+</td>
+</tr>
+</table>
+
+</td>
+<td width="50%">
 
 ## 🚀 Instalação
 
 ### Pré-requisitos
-- Python 3.13+ (versão mínima suportada)
-- pip (gerenciador de pacotes do Python)
 
-### Instalação via pipx (recomendado para usuários)
 ```bash
-# Instalar usando pipx (recomendado para isolar o ambiente)
+Python 3.13+ | pip | pipx (recomendado)
+```
+
+### Via pipx (Recomendado)
+
+```bash
+# Instalar usando pipx
 pipx install moriarty-project
 
-# OU para instalar uma versão específica
-# pipx install moriarty-project==0.1.27
-
-# Verificar a instalação
+# Verificar instalação
 moriarty --help
 ```
 
-### Instalação via pip (usuários avançados)
+### Via pip
+
 ```bash
-# Instalar globalmente
+# Instalação global
 pip install moriarty-project
 
-# OU para instalar para o usuário atual
-# pip install --user moriarty
-
-# Verificar a instalação
-moriarty --help
+# Instalação para usuário
+pip install --user moriarty-project
 ```
 
-### Instalação para desenvolvimento
+### Para Desenvolvimento
+
 ```bash
-# Clonar o repositório
+# Clonar repositório
 git clone https://github.com/DonatoReis/moriarty.git
 cd moriarty
 
-# Criar e ativar ambiente virtual (opcional, mas recomendado)
+# Criar ambiente virtual
 python -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Instalar em modo de desenvolvimento
+# Instalar em modo desenvolvimento
 pip install -e .
-
-# Instalar dependências de desenvolvimento
 pip install -r requirements-dev.txt
 ```
+
+---
 
 ## 💻 Uso Básico
 
 ### Estrutura de Comandos
-```
-moriarty [OPÇÕES] COMANDO [ARGUMENTOS] [OPÇÕES-DO-COMANDO]
+
+```bash
+moriarty [OPÇÕES_GLOBAIS] COMANDO [ARGUMENTOS] [OPÇÕES]
 ```
 
 ### Opções Globais
-- `--sign`: Assinar digitalmente os resultados
-- `--verbose`: Mostrar informações detalhadas de execução
-- `--concurrency INT`: Número máximo de tarefas concorrentes (padrão: 50)
-- `--timeout FLOAT`: Timeout por requisição em segundos (padrão: 8.0)
-- `--proxy URL`: Usar proxy HTTP/SOCKS
-- `--format FORMAT`: Formato de saída (table, json, yaml)
-- `--output PATH`: Salvar saída em arquivo
-- `--verbose`: Habilitar logs detalhados
-- `--quiet`: Suprimir saída não crítica
 
-## 🔍 Comandos e Exemplos
+| Opção | Descrição | Padrão |
+|-------|-----------|--------|
+| `--verbose` | Logs detalhados | `False` |
+| `--quiet` | Suprimir saída | `False` |
+| `--concurrency INT` | Tarefas concorrentes | `50` |
+| `--timeout FLOAT` | Timeout (segundos) | `8.0` |
+| `--proxy URL` | Proxy HTTP/SOCKS | - |
+| `--format` | Formato de saída | `table` |
+| `--output PATH` | Salvar em arquivo | - |
 
-### 📧 Comandos de E-mail
+</td>
+<td width="50%">
 
-#### `email check`
-Valida um endereço de e-mail usando heurísticas de DNS e SMTP.
+## 🔍 Comandos
 
-**Uso:**
+### 📧 E-mail
+
+<details>
+<summary><b>email check</b> - Validar endereço de e-mail</summary>
+
 ```bash
+# Uso básico
 moriarty email check usuario@exemplo.com
+
+# Com opções
+moriarty email check --verbose usuario@exemplo.com --format json --output resultado.json
 ```
 
-**Exemplo com opções:**
-```bash
-# Verificar e-mail com modo verboso
-moriarty email check --verbose usuario@exemplo.com
+</details>
 
-# Verificar e-mail e salvar resultado em JSON
-moriarty email check usuario@exemplo.com --format json --output resultado.json
+<details>
+<summary><b>email investigate</b> - Investigação aprofundada</summary>
+
+```bash
+# Investigar em múltiplas fontes
+moriarty email investigate usuario@exemplo.com --verbose
 ```
 
-#### `email investigate`
-Investiga um e-mail em múltiplas fontes (Gravatar, redes sociais, vazamentos).
+</details>
 
-**Uso:**
+### 👤 Usuário
+
+<details>
+<summary><b>user enum</b> - Enumerar nome de usuário</summary>
+
 ```bash
-moriarty email investigate usuario@exemplo.com
-```
-
-**Exemplo:**
-```bash
-# Investigação completa com saída detalhada
-moriarty email investigate --verbose usuario@exemplo.com
-```
-
-### 👤 Comandos de Usuário
-
-#### `user enum`
-Enumera um nome de usuário em múltiplos sites.
-
-**Uso:**
-```bash
+# Verificar disponibilidade
 moriarty user enum nomeusuario
+
+# Em sites específicos
+moriarty user enum nomeusuario --sites github,twitter,instagram --output resultados.json
 ```
 
-**Exemplo com opções:**
+</details>
+
+### 🌐 Domínio
+
+<details>
+<summary><b>domain scan</b> - Varredura completa</summary>
+
 ```bash
-# Verificar disponibilidade em sites específicos
-moriarty user enum nomeusuario --sites github,twitter,instagram
+# Varredura completa
+moriarty domain scan example.com --stealth 2 --threads 50
 
-# Salvar resultados em um arquivo
-moriarty user enum nomeusuario --output resultados_usuario.json
-```
-
-## 🛠️ Comandos Principais
-
-### `domain`
-Comandos para análise de domínios e redes.
-
-#### `domain scan`
-Varredura completa de domínio/IP.
-
-**Uso:**
-```bash
-moriarty domain scan example.com [OPÇÕES]
+# Módulos específicos
+moriarty domain scan example.com --modules dns,ports,ssl
 ```
 
 **Opções:**
-- `--modules`: Módulos a serem executados (all,dns,subdiscover,wayback,ports,ssl,crawl,fuzzer,template-scan,vuln-scan,waf-detect)
+- `--modules`: all, dns, subdiscover, wayback, ports, ssl, crawl, fuzzer, template-scan, vuln-scan, waf-detect
 - `--stealth`: Nível de stealth (0-4)
-- `--threads`: Número de threads concorrentes
+- `--threads`: Threads concorrentes
 - `--timeout`: Timeout em segundos
 
-#### `domain recon`
-Reconhecimento passivo de domínio.
+</details>
 
-**Uso:**
-```bash
-moriarty domain recon example.com [OPÇÕES]
-```
+<details>
+<summary><b>domain recon</b> - Reconhecimento passivo</summary>
 
-### `email`
-Ferramentas para análise de endereços de e-mail.
-
-#### `email check`
-Verifica a validade e informações de um e-mail.
-
-**Uso:**
-```bash
-moriarty email check user@example.com
-```
-
-### `intel`
-Ferramentas de inteligência de ameaças.
-
-#### `intel ioc`
-Analisa Indicadores de Comprometimento (IOCs).
-
-**Uso:**
-```bash
-moriarty intel ioc --file iocs.txt
-```
-
-## 🛠️ Exemplos
-
-### 1. Varredura Básica de Domínio
-```bash
-moriarty domain scan example.com --stealth 2 --threads 50
-```
-
-### 2. Reconhecimento Passivo
 ```bash
 moriarty domain recon example.com --output results.json
 ```
 
-### 3. Verificação de E-mail
-```bash
-moriarty email check user@example.com --format json
-```
+</details>
 
-### 4. Análise de IOC
+### 🎯 Inteligência
+
+<details>
+<summary><b>intel ioc</b> - Análise de IOCs</summary>
+
 ```bash
 moriarty intel ioc --file iocs.txt --output report.html
 ```
 
+</details>
+
+### 🌐 Rede
+
+| Comando | Descrição |
+|---------|-----------|
+| `network dns` | Consultas DNS avançadas |
+| `network tls` | Análise TLS/SSL |
+| `network rdap` | Consultas RDAP |
+
+### 🛠️ Ferramentas
+
+| Comando | Descrição |
+|---------|-----------|
+| `tools template` | Gerenciamento de templates |
+| `tools waf` | Testes de detecção WAF |
+
+</td>
+<td width="50%">
+
+## 🛠️ Exemplos Práticos
+
+```bash
+# 1. Varredura básica com stealth
+moriarty domain scan example.com --stealth 2 --threads 50
+
+# 2. Reconhecimento passivo completo
+moriarty domain recon example.com --output results.json --format json
+
+# 3. Verificação de e-mail com investigação
+moriarty email check user@example.com --verbose
+moriarty email investigate user@example.com
+
+# 4. Análise de IOCs com relatório HTML
+moriarty intel ioc --file iocs.txt --output report.html
+
+# 5. Enumeração de usuário em redes sociais
+moriarty user enum johndoe --sites github,twitter,linkedin
+```
+
+</td>
+<td width="50%">
+
 ## 🛡️ Recursos de Segurança
 
 ### Modo Profissional
-Ative o modo profissional para habilitar salvaguardas adicionais:
+
 ```bash
 moriarty --professional-mode domain scan example.com
 ```
 
-### Criptografia e Privacidade
-- Suporte a conexões criptografadas (HTTPS/TLS)
-- Opção para redação de PII (Informações Pessoais Identificáveis)
-- Suporte a proxies e Tor
+### Segurança e Privacidade
+
+- ✅ Conexões criptografadas (HTTPS/TLS)
+- ✅ Redação automática de PII
+- ✅ Suporte a proxies e Tor
+- ✅ Assinatura digital de resultados
+- ✅ Modo stealth avançado
+
+</td>
+<td width="50%">
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Siga estes passos:
+Contribuições são bem-vindas! 🎉
 
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Faça commit das suas alterações (`git commit -m 'Add some AmazingFeature'`)
-4. Faça push para a branch (`git push origin feature/AmazingFeature`)
+1. Fork o repositório
+2. Crie uma branch (`git checkout -b feature/NovaFeature`)
+3. Commit suas mudanças (`git commit -m 'Add: Nova feature'`)
+4. Push para a branch (`git push origin feature/NovaFeature`)
 5. Abra um Pull Request
+
+### Diretrizes
+
+- Siga o [Guia de Estilo](CONTRIBUTING.md)
+- Adicione testes para novas funcionalidades
+- Atualize a documentação
+- Mantenha o código limpo e documentado
+
+</td>
+<td width="50%">
 
 ## 📄 Licença
 
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+Distribuído sob a licença MIT. Veja [`LICENSE`](LICENSE) para mais informações.
 
-## 📧 Contato
+</td>
+<td width="50%">
 
-Equipe Moriarty - [contato@moriarty.dev](mailto:contato@moriarty.dev)
+## 🎯 Roadmap
 
-Link do Projeto: [https://github.com/DonatoReis/moriarty](https://github.com/DonatoReis/moriarty)
+- [ ] Interface Web (Dashboard)
+- [ ] API REST completa
+- [ ] Plugins de extensão
+- [ ] Integração com mais fontes OSINT
+- [ ] Relatórios automatizados
+- [ ] Modo colaborativo multi-usuário
 
----
+</td>
+<td width="50%">
 
-Este README foi gerado em 06/10/2023. Consulte a documentação online para informações mais recentes.
+## 🌟 Agradecimentos
 
-## 🔍 Índice de Comandos Detalhados
+Obrigado a todos os [contribuidores](https://github.com/DonatoReis/moriarty/graphs/contributors) que ajudam a tornar o Moriarty melhor!
 
-### Comandos de Domínio
-- `domain scan`: Varredura completa de domínio
-- `domain recon`: Reconhecimento passivo
-- `domain subdomains`: Enumeração de subdomínios
-- `domain wayback`: Análise histórica via Wayback Machine
-- `domain ports`: Varredura de portas
-- `domain crawl`: Web crawling
+</td>
+<td width="50%">
 
-### Comandos de E-mail
-- `email check`: Validação de e-mail usando DNS/SMTP
-- `email investigate`: Análise aprofundada em múltiplas fontes (Gravatar, redes sociais, vazamentos)
+<div align="center">
 
-### Comandos de Usuário
-- `user enum`: Verifica disponibilidade de nome de usuário em múltiplos sites
+**[⬆ Voltar ao topo](#moriarty)**
 
-### Comandos de Inteligência
-- `intel ioc`: Análise de IOCs
-- `intel threat`: Verificação de ameaças
+*Desenvolvido com ❤️ pela comunidade*
 
-### Comandos de Rede
-- `network dns`: Consultas DNS
-- `network tls`: Análise TLS/SSL
-- `network rdap`: Consultas RDAP
-
-### Ferramentas
-- `tools template`: Gerenciamento de templates
-- `tools waf`: Testes de WAF
-
----
-
-Para obter ajuda detalhada sobre qualquer comando, use:
-```bash
-moriarty [comando] --help
-```
+</div>
