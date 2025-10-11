@@ -1,7 +1,7 @@
 <div align="left">
 
 <a href="https://pepy.tech/project/moriarty-project">
-  <img src="https://img.shields.io/badge/DOWNLOADS-4.2K-00D26A?style=for-the-badge&labelColor=2D2D2D&logo=python&logoColor=white" alt="Downloads"/>
+  <img src="https://img.shields.io/pepy/dt/moriarty-project?style=for-the-badge&labelColor=2D2D2D&color=00D26A&logo=python&logoColor=white&label=DOWNLOADS" alt="Downloads"/>
 </a>
 
 <a href="https://pypi.org/project/moriarty-project/">
