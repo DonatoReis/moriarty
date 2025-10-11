@@ -18,7 +18,7 @@
 
 *Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração*
 
-<img src="./assets/img/moriarty-banner.png" alt="Moriarty Banner" width="60%"/>
+<img src="./assets/img/terminal.png" alt="Moriarty Banner" width="90%"/>
 
 </div>
 
