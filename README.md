@@ -6,74 +6,77 @@
 
 # Moriarty
 
-### Ferramenta Avançada de OSINT e Investigação Digital
+### Advanced OSINT and Digital Investigation Tool
 
-*Ferramenta avançada de reconhecimento e análise de segurança para investigações OSINT e testes de penetração*
+*Advanced reconnaissance and security analysis tool for OSINT investigations and penetration testing*
 
 <img src="./assets/img/terminal.png" alt="Moriarty Banner" width="90%"/>
 
+</td>
+<td width="50%">
+
+**🌍 Language / Idioma:**  
+
+<a href="README.md" style="text-decoration: none;"><img src="https://img.shields.io/badge/LANG-ENGLISH-0094FF?style=for-the-badge&labelColor=2D2D2D&logo=googletranslate&logoColor=white" alt="English"/></a>
+<a href="README.pt-br.md" style="text-decoration: none;"><img src="https://img.shields.io/badge/LANG-PORTUGUÊS-00D26A?style=for-the-badge&labelColor=2D2D2D&logo=googletranslate&logoColor=white" alt="Português-Br"/></a>
 </div>
 
 </td>
 <td width="50%">
 
-## 📑 Índice
+## 📑 Table of Contents
 
-- [🌟 Recursos Principais](#-recursos-principais)
-- [🚀 Instalação](#-instalação)
-- [💻 Uso Básico](#-uso-básico)
-- [🔍 Comandos](#-comandos)
-- [🛡️ Segurança](#️-recursos-de-segurança)
-- [🤝 Contribuindo](#-contribuindo)
-- [📄 Licença](#-licença)
+- [🌟 Key Features](#-key-features)
+- [🚀 Installation](#-installation)
+- [💻 Basic Usage](#-basic-usage)
+- [🔍 Commands](#-commands)
+- [🛡️ Security](#️-security-features)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
 
 </td>
 <td width="50%">
 
-## 🌟 Recursos Principais
+## 🌟 Key Features
 
 <table>
 <tr>
+<td width="50%">
+
+### 🔍 Passive Reconnaissance
+- OSINT information gathering
+- Subdomain discovery
+- SSL/TLS certificate analysis
+- WHOIS/RDAP metadata
 
 </td>
 <td width="50%">
 
-### 🔍 Reconhecimento Passivo
-- Coleta de informações OSINT
-- Descoberta de subdomínios
-- Análise de certificados SSL/TLS
-- Metadados WHOIS/RDAP
-
-</td>
-<td width="50%">
-
-### 🛡️ Varredura de Segurança
-- Detecção de serviços e portas
-- Identificação de tecnologias web
-- Scanner de vulnerabilidades
-- Detecção de WAF/IPS/IDS
+### 🛡️ Security Scanning
+- Service and port detection
+- Web technology identification
+- Vulnerability scanner
+- WAF/IPS/IDS detection
 
 </td>
 </tr>
 <tr>
+<td width="50%">
+
+### 📧 Email Analysis
+- DNS/SMTP validation
+- Multi-source investigation
+- Breach verification
+- Reputation analysis
 
 </td>
 <td width="50%">
 
-### 📧 Análise de E-mail
-- Validação DNS/SMTP
-- Investigação em múltiplas fontes
-- Verificação de vazamentos
-- Análise de reputação
-
-</td>
-<td width="50%">
-
-### 🎯 Inteligência de Ameaças
-- Análise de IOCs
-- Verificação de credenciais
-- Reputação de domínios
-- Detecção de ameaças conhecidas
+### 🎯 Threat Intelligence
+- IOC analysis
+- Credential verification
+- Domain reputation
+- Known threat detection
 
 </td>
 </tr>
@@ -82,140 +85,141 @@
 </td>
 <td width="50%">
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### Pré-requisitos
+### Prerequisites
 
 ```bash
-Python 3.13+ | pip | pipx (recomendado)
+Python 3.13+ | pip | pipx (recommended)
 ```
 
-### Via pipx (Recomendado)
+### Via pipx (Recommended)
 
 ```bash
-# Instalar usando pipx
+# Install using pipx
 pipx install moriarty-project
 
-# Verificar instalação
+# Verify installation
 moriarty --help
 ```
 
 ### Via pip
 
 ```bash
-# Instalação global
+# Global installation
 pip install moriarty-project
 
-# Instalação para usuário
+# User installation
 pip install --user moriarty-project
 ```
 
-### Para Desenvolvimento
+### For Development
 
 ```bash
-# Clonar repositório
+# Clone repository
 git clone https://github.com/DonatoReis/moriarty.git
 cd moriarty
 
-# Criar ambiente virtual
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Instalar em modo desenvolvimento
+# Install in development mode
 pip install -e .
 pip install -r requirements-dev.txt
 ```
 
----
+</td>
+<td width="50%">
 
-## 💻 Uso Básico
+## 💻 Basic Usage
 
-### Estrutura de Comandos
+### Command Structure
 
 ```bash
-moriarty [OPÇÕES_GLOBAIS] COMANDO [ARGUMENTOS] [OPÇÕES]
+moriarty [GLOBAL_OPTIONS] COMMAND [ARGUMENTS] [OPTIONS]
 ```
 
-### Opções Globais
+### Global Options
 
-| Opção | Descrição | Padrão |
-|-------|-----------|--------|
-| `--verbose` | Logs detalhados | `False` |
-| `--quiet` | Suprimir saída | `False` |
-| `--concurrency INT` | Tarefas concorrentes | `50` |
-| `--timeout FLOAT` | Timeout (segundos) | `8.0` |
-| `--proxy URL` | Proxy HTTP/SOCKS | - |
-| `--format` | Formato de saída | `table` |
-| `--output PATH` | Salvar em arquivo | - |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--verbose` | Detailed logs | `False` |
+| `--quiet` | Suppress output | `False` |
+| `--concurrency INT` | Concurrent tasks | `50` |
+| `--timeout FLOAT` | Timeout (seconds) | `8.0` |
+| `--proxy URL` | HTTP/SOCKS proxy | - |
+| `--format` | Output format | `table` |
+| `--output PATH` | Save to file | - |
 
 </td>
 <td width="50%">
 
-## 🔍 Comandos
+## 🔍 Commands
 
-### 📧 E-mail
+### 📧 Email
 
 <details>
-<summary><b>email check</b> - Validar endereço de e-mail</summary>
+<summary><b>email check</b> - Validate email address</summary>
 
 ```bash
-# Uso básico
-moriarty email check usuario@exemplo.com
+# Basic usage
+moriarty email check user@example.com
 
-# Com opções
-moriarty email check --verbose usuario@exemplo.com --format json --output resultado.json
+# With options
+moriarty email check --verbose user@example.com --format json --output result.json
 ```
 
 </details>
 
 <details>
-<summary><b>email investigate</b> - Investigação aprofundada</summary>
+<summary><b>email investigate</b> - Deep investigation</summary>
 
 ```bash
-# Investigar em múltiplas fontes
-moriarty email investigate usuario@exemplo.com --verbose
+# Investigate across multiple sources
+moriarty email investigate user@example.com --verbose
 ```
 
 </details>
 
-### 👤 Usuário
+### 👤 User
 
 <details>
-<summary><b>user enum</b> - Enumerar nome de usuário</summary>
+<summary><b>user enum</b> - Enumerate username</summary>
 
 ```bash
-# Verificar disponibilidade
-moriarty user enum nomeusuario
+# Check availability
+moriarty user enum username
 
-# Em sites específicos
-moriarty user enum nomeusuario --sites github,twitter,instagram --output resultados.json
+# On specific sites
+moriarty user enum username --sites github,twitter,instagram --output results.json
 ```
 
 </details>
 
-### 🌐 Domínio
+### 🌐 Domain
 
 <details>
-<summary><b>domain scan</b> - Varredura completa</summary>
+<summary><b>domain scan</b> - Complete scan</summary>
 
 ```bash
-# Varredura completa
+# Full scan
 moriarty domain scan example.com --stealth 2 --threads 50
 
-# Módulos específicos
+# Specific modules
 moriarty domain scan example.com --modules dns,ports,ssl
 ```
 
-**Opções:**
+**Options:**
 - `--modules`: all, dns, subdiscover, wayback, ports, ssl, crawl, fuzzer, template-scan, vuln-scan, waf-detect
-- `--stealth`: Nível de stealth (0-4)
-- `--threads`: Threads concorrentes
-- `--timeout`: Timeout em segundos
+- `--stealth`: Stealth level (0-4)
+- `--threads`: Concurrent threads
+- `--timeout`: Timeout in seconds
 
 </details>
 
 <details>
-<summary><b>domain recon</b> - Reconhecimento passivo</summary>
+<summary><b>domain recon</b> - Passive reconnaissance</summary>
 
 ```bash
 moriarty domain recon example.com --output results.json
@@ -223,10 +227,10 @@ moriarty domain recon example.com --output results.json
 
 </details>
 
-### 🎯 Inteligência
+### 🎯 Intelligence
 
 <details>
-<summary><b>intel ioc</b> - Análise de IOCs</summary>
+<summary><b>intel ioc</b> - IOC analysis</summary>
 
 ```bash
 moriarty intel ioc --file iocs.txt --output report.html
@@ -234,116 +238,115 @@ moriarty intel ioc --file iocs.txt --output report.html
 
 </details>
 
-### 🌐 Rede
+### 🌐 Network
 
-| Comando | Descrição |
-|---------|-----------|
-| `network dns` | Consultas DNS avançadas |
-| `network tls` | Análise TLS/SSL |
-| `network rdap` | Consultas RDAP |
+| Command | Description |
+|---------|-------------|
+| `network dns` | Advanced DNS queries |
+| `network tls` | TLS/SSL analysis |
+| `network rdap` | RDAP queries |
 
-### 🛠️ Ferramentas
+### 🛠️ Tools
 
-| Comando | Descrição |
-|---------|-----------|
-| `tools template` | Gerenciamento de templates |
-| `tools waf` | Testes de detecção WAF |
+| Command | Description |
+|---------|-------------|
+| `tools template` | Template management |
+| `tools waf` | WAF detection tests |
 
 </td>
 <td width="50%">
 
-## 🛠️ Exemplos Práticos
+## 🛠️ Practical Examples
 
 ```bash
-# 1. Varredura básica com stealth
+# 1. Basic scan with stealth
 moriarty domain scan example.com --stealth 2 --threads 50
 
-# 2. Reconhecimento passivo completo
+# 2. Complete passive reconnaissance
 moriarty domain recon example.com --output results.json --format json
 
-# 3. Verificação de e-mail com investigação
+# 3. Email verification with investigation
 moriarty email check user@example.com --verbose
 moriarty email investigate user@example.com
 
-# 4. Análise de IOCs com relatório HTML
+# 4. IOC analysis with HTML report
 moriarty intel ioc --file iocs.txt --output report.html
 
-# 5. Enumeração de usuário em redes sociais
+# 5. Username enumeration on social networks
 moriarty user enum johndoe --sites github,twitter,linkedin
 ```
 
 </td>
 <td width="50%">
 
-## 🛡️ Recursos de Segurança
+## 🛡️ Security Features
 
-### Modo Profissional
+### Professional Mode
 
 ```bash
 moriarty --professional-mode domain scan example.com
 ```
 
-### Segurança e Privacidade
+### Security and Privacy
 
-- ✅ Conexões criptografadas (HTTPS/TLS)
-- ✅ Redação automática de PII
-- ✅ Suporte a proxies e Tor
-- ✅ Assinatura digital de resultados
-- ✅ Modo stealth avançado
-
-</td>
-<td width="50%">
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! 🎉
-
-1. Fork o repositório
-2. Crie uma branch (`git checkout -b feature/NovaFeature`)
-3. Commit suas mudanças (`git commit -m 'Add: Nova feature'`)
-4. Push para a branch (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
-
-### Diretrizes
-
-- Siga o [Guia de Estilo](CONTRIBUTING.md)
-- Adicione testes para novas funcionalidades
-- Atualize a documentação
-- Mantenha o código limpo e documentado
+- ✅ Encrypted connections (HTTPS/TLS)
+- ✅ Automatic PII redaction
+- ✅ Proxy and Tor support
+- ✅ Digital signature of results
+- ✅ Advanced stealth mode
 
 </td>
 <td width="50%">
 
-## 📄 Licença
+## 🤝 Contributing
 
-Distribuído sob a licença MIT. Veja [`LICENSE`](LICENSE) para mais informações.
+Contributions are welcome! 🎉
+
+1. Fork the repository
+2. Create a branch (`git checkout -b feature/NewFeature`)
+3. Commit your changes (`git commit -m 'Add: New feature'`)
+4. Push to the branch (`git push origin feature/NewFeature`)
+5. Open a Pull Request
+
+### Guidelines
+
+- Follow the [Style Guide](CONTRIBUTING.md)
+- Add tests for new features
+- Update documentation
+- Keep code clean and documented
+
+</td>
+<td width="50%">
+
+## 📄 License
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 </td>
 <td width="50%">
 
 ## 🎯 Roadmap
 
-- [ ] Interface Web (Dashboard)
-- [ ] API REST completa
-- [ ] Plugins de extensão
-- [ ] Integração com mais fontes OSINT
-- [ ] Relatórios automatizados
-- [ ] Modo colaborativo multi-usuário
+- [ ] Web Interface (Dashboard)
+- [ ] Complete REST API
+- [ ] Extension plugins
+- [ ] Integration with more OSINT sources
+- [ ] Automated reports
+- [ ] Multi-user collaborative mode
 
-</td>
-<td width="50%">
+ </td> <td width="50%">
 
-## 🌟 Agradecimentos
+## 🌟 Acknowledgments
 
-Obrigado a todos os [contribuidores](https://github.com/DonatoReis/moriarty/graphs/contributors) que ajudam a tornar o Moriarty melhor!
+Thanks to all [contributors](https://github.com/DonatoReis/moriarty/graphs/contributors) who help make Moriarty better!
 
 </td>
 <td width="50%">
 
 <div align="center">
 
-**[⬆ Voltar ao topo](#moriarty)**
+**[⬆ Back to top](#moriarty)**
 
-*Desenvolvido com ❤️ pela comunidade*
+*Developed with ❤️ by the community*
 
 </div>
