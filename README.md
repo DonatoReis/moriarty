@@ -325,17 +325,6 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 </td>
 <td width="50%">
 
-## 🎯 Roadmap
-
-- [ ] Web Interface (Dashboard)
-- [ ] Complete REST API
-- [ ] Extension plugins
-- [ ] Integration with more OSINT sources
-- [ ] Automated reports
-- [ ] Multi-user collaborative mode
-
- </td> <td width="50%">
-
 ## 🌟 Acknowledgments
 
 Thanks to all [contributors](https://github.com/DonatoReis/moriarty/graphs/contributors) who help make Moriarty better!
